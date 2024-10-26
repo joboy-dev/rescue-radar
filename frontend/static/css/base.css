@@ -1,0 +1,170 @@
+:root {
+--black-color: #393939;
+--white-color: #FFFFFF;
+--primary-color: #D22626;
+--secondary-color: #FC924B;
+--tertiary-color: #FFA569;
+--success-color: rgba(47, 168, 108);
+--error-color: rgba(238, 107, 107);
+--info-color: rgb(236, 238, 107);
+--padding: 20px 120px;
+--box-shadow: 2px 4px 8px rgb(0, 0, 0, 0.3);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: 0.3s linear;
+    scroll-behavior: smooth;
+    font-family: 'Poppins', 'Open Sans', sans-serif;
+}
+
+/* ANIMATIONS */
+@keyframes fadeSlide {
+    from {
+        translate: -20px 0;
+        opacity: 0;
+    }
+
+    to {
+        translate: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeSlideLeft {
+    from {
+        translate: 20px 0;
+        opacity: 0;
+    }
+
+    to {
+        translate: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        translate: 0 -20px;
+        opacity: 0;
+    }
+
+    to {
+        translate: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUpDown {
+    from {
+        scale: 1.1;
+    }
+
+    to {
+        scale: 1;
+    }
+}
+
+
+html {
+    font-size: 30px;
+}
+
+body {
+    background-color: var(--white-color);
+    position: relative;
+}
+
+
+/* NAVBAR */
+
+nav {
+    width: 100%;
+    height: 10vh;
+    background-color: var(--black-color);
+    padding: var(--padding);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 25%;
+}
+
+.logo img {
+    width: 100%;
+}
+
+nav .nav-links {
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+nav .nav-links a {
+    text-decoration: none;
+    color: var(--white-color);
+    font-size: 0.7rem;
+    padding: 0 20px;
+}
+
+nav .nav-links a:hover {
+    color: var(--tertiary-color);
+}
+
+/* MAIN CONTENT */
+main {
+    margin: 10vh 0;
+}
+
+/* BUTTONS */
+.btn {
+    padding: 50px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+}
+
+.btn:hover {
+    background-color: var(--tertiary-color);
+    color: var(--white-color);
+}
+
+/* SCROLL BAR */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--white-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--tertiary-color);
+}
+
+
+/* FOOTER */
+
+footer {
+    width: 100%;
+    height: fit-content;
+    background-color: var(--black-color);
+    padding: var(--padding);
+    /* position: fixed;
+    bottom: 0;
+    left: 0; */
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    color: var(--white-color);
+}
