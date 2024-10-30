@@ -26,7 +26,7 @@ class User(BaseTableModel):
     reported_emergencies = relationship('Emergency', back_populates='reported_by')
     notifications = relationship('Notification', back_populates='target_user')
     responder_profile = relationship('Responder', back_populates='user', uselist=False)
-    created_agencies = relationship('Agency', back_populates='created_by')
+    created_agencies = relationship('Agency', back_populates='created_by', uselist=False)
     
     
     def to_dict(self):

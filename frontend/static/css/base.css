@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
 :root {
 --black-color: #393939;
 --white-color: #FFFFFF;
@@ -8,6 +11,8 @@
 --error-color: rgba(238, 107, 107);
 --info-color: rgb(236, 238, 107);
 --padding: 20px 120px;
+--padding-tab: 20px 50px;
+--padding-mobile: 20px;
 --box-shadow: 2px 4px 8px rgb(0, 0, 0, 0.3);
 }
 
@@ -77,6 +82,10 @@ body {
     position: relative;
 }
 
+.hide {
+    display: none;
+}
+
 
 /* NAVBAR */
 
@@ -95,48 +104,69 @@ nav {
 }
 
 .logo {
-    width: 25%;
+    width: 20%;
 }
 
 .logo img {
-    width: 100%;
+    width: 80%;
 }
 
 nav .nav-links {
-    width: 70%;
+    width: 75%;
     display: flex;
     align-items: center;
     justify-content: end;
 }
 
-nav .nav-links a {
+nav .nav-links .link a {
     text-decoration: none;
     color: var(--white-color);
     font-size: 0.7rem;
     padding: 0 20px;
 }
 
-nav .nav-links a:hover {
+nav .nav-links .link a:hover {
+    color: var(--tertiary-color);
+}
+
+nav .nav-links .link a.active {
     color: var(--tertiary-color);
 }
 
 /* MAIN CONTENT */
-main {
-    margin: 10vh 0;
+/* main {
+    padding: var(--padding);
+} */
+
+section {
+    height: fit-content;
+    width: 100%;
+}
+
+section > * {
+    padding: var(--padding);
 }
 
 /* BUTTONS */
-.btn {
-    padding: 50px;
+a.btn, button.btn {
+    text-decoration: none;
+    color: var(--white-color);
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: var(--primary-color);
+    font-size: 0.7rem;
 }
 
-.btn:hover {
+a.btn:hover, button.btn:hover {
     background-color: var(--tertiary-color);
-    color: var(--white-color);
+}
+
+/* ICONS */
+img.icon {
+    height: 100px;
+    width: 100px;
 }
 
 /* SCROLL BAR */
@@ -167,4 +197,62 @@ footer {
     align-items: center;
     justify-content: start;
     color: var(--white-color);
+}
+
+
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+
+/* TAB */
+
+@media screen and (max-width: 1024px) {
+    html {
+        font-size: 27px;
+    }
+
+    nav {
+        padding: var(--padding-tab);
+    }
+
+    .logo {
+        width: 50%;
+    }
+
+    section > * {
+        padding: var(--padding-tab);
+    }
+
+    footer {
+        padding: var(--padding-tab);
+    }
+}
+
+
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+
+/* MOBILE */
+
+@media screen and (max-width: 540px) {
+    html {
+        font-size: 25px;
+    }
+
+    nav {
+        padding: var(--padding-mobile);
+    }
+
+    .logo {
+        width: 50%;
+    }
+
+    section > * {
+        padding: var(--padding-mobile);
+    }
+
+    footer {
+        padding: var(--padding-mobile);
+    }
 }

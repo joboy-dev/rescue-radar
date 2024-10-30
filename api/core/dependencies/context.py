@@ -2,6 +2,7 @@ import datetime as dt
 from functools import wraps
 from typing import Callable
 from fastapi import Request, Response
+from fastapi.responses import RedirectResponse
 
 
 def inject_context(request: Request):
@@ -26,8 +27,16 @@ def add_template_context(template_name: str):
             # Run the route function to get extra context data from the function itself
             result = await func(request, *args, **kwargs)
             
+            # Check if the function returned a RedirectResponse (usually for POST redirection)
+            if isinstance(result, RedirectResponse):
+                return result
+            
             # Merge function data with context_data
-            context = {**context_data, **result}
+            context = {
+                'page': template_name.split('/')[-1].replace('.html', ''),
+                **context_data, 
+                **result
+            }
             
             return frontend.TemplateResponse(template_name, context)
         return wrapper

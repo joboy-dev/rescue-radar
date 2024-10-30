@@ -1,0 +1,13 @@
+{% extends 'components/base-form.html' %}
+
+{% block extra_fields %}
+<div class="roles">
+    {% for role in roles %}
+    <div class="option" data-value="{{ role.value }}">
+        <img src="{{ role.icon }}" alt="icon" class="icon">
+        <p>{{ role.name }}</p>
+    </div>
+    {% endfor %}
+</div>
+<input type="hidden" name="role" id="selected-role" value="">
+{% endblock %}

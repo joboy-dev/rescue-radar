@@ -65,13 +65,6 @@ app.mount("/static", staticfiles.StaticFiles(directory="frontend/static"), name=
 # Include all routes
 app.include_router(v1_router)
 
-# Set up index route
-@app.get('/')
-@add_template_context('pages/index.html')
-async def index(request: Request):
-    return {}
-
-
 @app.exception_handler(HTTPException)
 async def http_exception(request: Request, exc: HTTPException):
     """HTTP exception handler"""

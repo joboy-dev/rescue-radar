@@ -1,0 +1,45 @@
+div.roles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+div.roles .option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 40%;
+    border: 1px solid var(--secondary-color);
+    border-radius: 20px;
+    padding: 20px;
+    color: var(--black-color);
+    font-size: 0.7rem;
+}
+
+div.roles .option:hover {
+    color: var(--white-color);
+    background-color: var(--secondary-color);
+}
+
+div.roles .option.selected {
+    color: var(--white-color);
+    background-color: var(--secondary-color);
+}
+
+img.icon {
+    width: 50px;
+    height: 50px;
+}
+
+
+/* MOBILE */
+
+@media screen and (max-width: 1024px) {
+    div.roles .option {
+        width: 80%;
+    }
+}

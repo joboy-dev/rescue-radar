@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="icon" href="static/favicon/favicon.ico">
+    <link rel="stylesheet" href="static/css/base.css">
+    {% block head_tags %} {% endblock %}
+</head>
+<body>
+    {% include 'components/navbar.html' %}
+
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+
+    {% include 'components/footer.html' %}
+    
+    {% block script_tags %} {% endblock %}
+</body>
+</html>

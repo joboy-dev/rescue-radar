@@ -84,6 +84,13 @@ class BaseTableModel(Base):
         return db.query(self).filter_by(id=id, is_deleted=False).first()
 
     @classmethod
+    def fetch_one_by_field(self, **kwargs):
+        """Fetches all records that match the given field(s)"""
+        
+        db = next(get_db())
+        return db.query(self).filter_by(**kwargs, is_deleted=False).first()
+    
+    @classmethod
     def fetch_by_field(self, **kwargs):
         """Fetches all records that match the given field(s)"""
         

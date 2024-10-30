@@ -1,0 +1,46 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="/static/css/forms.css">
+<link rel="stylesheet" href="/static/css/auth-forms.css">
+{% endblock %}
+
+{% block form_styles %}{% endblock %}
+
+
+{% block content%}
+<section id="form" style="background: url('{{background_url}}'); background-size: cover; background-repeat: no-repeat;">
+    <form method="post" action="{{ form.action }}" enctype="{{ form.enctype }}">
+        <div class="header">
+            <h2>{{ form.title }}</h2>
+            {% if form.subtitle %}
+            <p>{{ form.subtitle }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="form-fields">
+            {% if form.fields %}
+                {% for field in form.fields %}
+                <div class="form-group">
+                    <label for="{{ field.name }}">{{ field.label }} {% if field.required %}<span>*</span>{% endif %}</label>
+                    <input type="{{ field.type }}" id="{{ field.name }}" {% if field.required %}required{% endif %}>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block extra_fields %}{% endblock %}
+
+            <input type="submit" value="{{ form.button_text }}">
+
+            <div class="extras">
+                {% block extra_content %}{% endblock %}
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block script_tags %} 
+<script src="/static/js/fileUpload.js"></script>
+<script src="/static/js/roleSelect.js"></script>
+{% endblock %}
