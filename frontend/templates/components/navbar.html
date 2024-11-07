@@ -1,19 +1,56 @@
 <nav>
     <a class="logo" href="{{ url_for('home') }}">
-        <img src="static/images/logo.png" alt="logo">
+        <img src="{{ url_for('static', path='images/logo.png') }}" alt="logo">
     </a>
 
 
 <!-- <img src="https://cdn-icons-png.freepik.com/256/10024/10024438.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt=""> -->
 
     <div class="nav-links">
+        {% if user %}
+        <!-- <div class="search-bar">
+            <input type="text" placeholder="Search...">
+            <button type="submit"><img src="https://cdn-icons-png.freepik.com/256/16205/16205471.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="search" class="icon"></button>
+        </div> -->
+
+        <div class="dropdown">
+            <div class="button">
+                {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture }}" alt="profile picture">
+                {% else %}
+                <img src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="profile">
+                {% endif %}
+            </div>
+            <div class="dropdown-content">
+                <div class="pic-container">
+                    <div class="profile-pic">
+                        {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture }}" alt="profile picture">
+                        {% else %}
+                        <img src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="profile">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="links">
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
         <div class="link">
             <a href="{{ url_for('home') }}" class="{% if page == 'index' %} active {% endif %}">Home</a>
             <a href="{{ url_for('about') }}" class="{% if page == 'about' %} active {% endif %}">About</a>
             <a href="{{ url_for('contact') }}" class="{% if page == 'contact' %} active {% endif %}">Contact</a>
         </div>
+        {% endif %}
         <div class="button">
+            {% if not user %}
             <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
+            {% endif %}
         </div>
     </div>
 </nav>

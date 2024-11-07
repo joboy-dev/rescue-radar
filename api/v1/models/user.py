@@ -16,7 +16,7 @@ class User(BaseTableModel):
 
     email = sa.Column(sa.String, nullable=False, unique=True)
     password = sa.Column(sa.String, nullable=False)
-    role = sa.Column(sa.String, nullable=False, server_default=UserRole.PUBLIC.value)
+    role = sa.Column(sa.String, nullable=True)
     is_active = sa.Column(sa.Boolean, server_default='true')
     last_login = sa.Column(sa.DateTime(timezone=True), server_default=sa.func.now())
 

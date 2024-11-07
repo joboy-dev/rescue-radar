@@ -20,6 +20,10 @@ class ResponderEmergency(BaseTableModel):
     
     emergency_id = sa.Column(sa.String, sa.ForeignKey('emergencies.id'))
     responder_id = sa.Column(sa.String, sa.ForeignKey('responders.id'))
+    final_report_id = sa.Column(sa.String, sa.ForeignKey('final_reports.id'))
 
-    emergency = relationship('Emergency', back_populates='responders')
+    # Relationships
+    emergency = relationship('Emergency', back_populates='responder_emergencies')
     responder = relationship('Responder', back_populates='assigned_emergencies')
+    final_report = relationship('FinalReport', back_populates='responders')
+    

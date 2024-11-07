@@ -40,6 +40,6 @@ class Emergency(BaseTableModel):
     
     reported_by = relationship('User', back_populates='reported_emergencies')
     notifications = relationship('Notification', back_populates='emergency')
-    responders = relationship('ResponderEmergency', back_populates='emergency')
+    responder_emergencies = relationship('ResponderEmergency', back_populates='emergency')
     resources_used = relationship('ResourceAllocation', back_populates='emergency')
     final_report = relationship('FinalReport', back_populates='emergency', uselist=False)

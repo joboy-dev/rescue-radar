@@ -1,14 +1,16 @@
 from typing import Any, Optional, Annotated
 import datetime as dt
+from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBearer
 from jose import JWTError, jwt
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
+from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.db.database import get_db
 from api.utils.settings import settings
-from api.v1.models.tokens import BlackListedToken
+from api.v1.models.tokens import BlacklistedToken, Token
 from api.v1.models.user import User
 from api.v1.schemas.user import TokenData
 
@@ -42,17 +44,31 @@ class AuthService:
         return pwd_context.verify(password, hash)
     
     @classmethod
-    def create_access_token(cls, db: Session, user_id: str):
+    def create_access_token(cls, user_id: str):
         expires = dt.datetime.now(dt.timezone.utc) + dt.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         data = {"user_id": user_id, "exp": expires, "type": "access"}
         encoded_jwt = jwt.encode(data, settings.SECRET_KEY, settings.ALGORITHM)
+        
+        Token.create(
+            token=encoded_jwt,
+            token_type='access',
+            expiry_time=expires,
+            user_id=user_id
+        )
         return encoded_jwt
 
     @classmethod
-    def create_refresh_token(cls, db: Session, user_id: str):
+    def create_refresh_token(cls, user_id: str):
         expires = dt.datetime.now(dt.timezone.utc) + dt.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         data = {"user_id": user_id, "exp": expires, "type": "refresh"}
         encoded_jwt = jwt.encode(data, settings.SECRET_KEY, settings.ALGORITHM)
+        
+        Token.create(
+            token=encoded_jwt,
+            token_type='refresh',
+            expiry_time=expires,
+            user_id=user_id
+        )
         return encoded_jwt
     
     @classmethod
@@ -67,19 +83,21 @@ class AuthService:
             token_type = payload.get("type")
             
             # Check if token is blackliosted
-            blacklisted_token = BlackListedToken.fetch_one_by_field(token=access_token)
+            blacklisted_token = BlacklistedToken.fetch_one_by_field(token=access_token)
 
             if user_id is None or blacklisted_token is not None:
                 raise credentials_exception
-
+                # raise HTTPException(status_code=401, detail="Could not validate credentials")
+                
             if token_type == "refresh":
                 raise HTTPException(detail="Refresh token not allowed", status_code=400)
 
-            token_data = TokenData(id=user_id)
+            token_data = TokenData(user_id=user_id)
 
         except JWTError as err:
             print(err)
             raise credentials_exception
+            # raise HTTPException(status_code=401, detail="Could not validate credentials")
 
         return token_data
 
@@ -94,7 +112,7 @@ class AuthService:
             user_id = payload.get("user_id")
             token_type = payload.get("type")
             
-            blacklisted_token = BlackListedToken.fetch_one_by_field(token=refresh_token)
+            blacklisted_token = BlacklistedToken.fetch_one_by_field(token=refresh_token)
 
             if user_id is None or blacklisted_token is not None:
                 raise credentials_exception
@@ -102,7 +120,7 @@ class AuthService:
             if token_type == "access":
                 raise HTTPException(detail="Access token not allowed", status_code=400)
 
-            token_data = TokenData(id=user_id)
+            token_data = TokenData(user_id=user_id)
 
         except (JWTError, AttributeError):
             raise credentials_exception
@@ -124,12 +142,22 @@ class AuthService:
             refresh = cls.create_refresh_token(user_id=token.id)
 
             return access, refresh
+    
+    @classmethod
+    def revoke_token(cls, token: str, user_id: str):
+        """Function to revoke token"""
+        
+        token_obj = Token.fetch_one_by_field(token=token)
+        BlacklistedToken.create(token=token_obj.token, user_id=user_id)
+        Token.hard_delete(id=token_obj.id)
         
     @classmethod
     def get_current_user(
         cls, 
-        access_token: str = Depends(bearer_scheme), 
-    ) -> User:
+        request: Request,
+        # access_token: str = Depends(bearer_scheme), 
+    # ) -> Optional[User]:
+    ):
         """Function to get current logged in user"""
 
         credentials_exception = HTTPException(
@@ -137,13 +165,37 @@ class AuthService:
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-        token = cls.verify_access_token(access_token, credentials_exception)
-        user = User.fetch_by_id(token.id)
         
-        if not user:
-            raise credentials_exception
+        access_token = request.cookies.get("access_token")
+        if not access_token:
+            # Redirect to login if no token
+            flash(request, 'Please login', MessageCategory.ERROR)
+            return RedirectResponse(url="/login", status_code=303)
 
-        return user
-
+        try:
+            token = cls.verify_access_token(access_token, credentials_exception)
+            user = User.fetch_by_id(token.user_id)
+            return user
+        
+        except HTTPException as e:
+            flash(request, e.detail, MessageCategory.ERROR)
+            return RedirectResponse(url="/login", status_code=303)
     
+    @classmethod
+    def unauthenticated_only(cls, request: Request):
+        """Dependency to redirect authenticated users to the dashboard if they access an unauthenticated-only page."""
+        
+        credentials_exception = HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
+        # Check if the user is authenticated
+        access_token = request.cookies.get("access_token")
+        if access_token and cls.verify_access_token(access_token, credentials_exception):
+            # User is authenticated; redirect to the dashboard
+            return RedirectResponse(url="/dashboard", status_code=303)
+        
+        # User is not authenticated; allow access to the page
+        return None

@@ -1,13 +1,21 @@
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import RedirectResponse
 
 from api.core.dependencies.context import add_template_context
+from api.v1.services.auth import AuthService
 
 
 external_router = APIRouter()
 
 @external_router.get('/')
 @add_template_context('pages/external/index.html')
-async def home(request: Request):
+async def home(
+    request: Request,
+    # unauthenticated = Depends(AuthService.unauthenticated_only)
+):
+    # if isinstance(unauthenticated, RedirectResponse):
+    #     return unauthenticated 
+    
     benefits = [
         {
             "icon": "https://cdn-icons-png.freepik.com/256/6699/6699339.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid",

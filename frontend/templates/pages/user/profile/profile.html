@@ -1,0 +1,91 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="/static/css/profile.css">
+{% endblock %}
+
+{% block content %}
+<section id="profile-page">
+    <header>
+        <h2>User Profile</h2>
+    </header>
+    
+    <div class="profile-details">
+        <div class="profile-card">
+            <form action="" class="upload-pic-form" enctype="multipart/form-data">
+                <label for="profile-picture-upload">
+                    {% if user.profile.profile_picture %}
+                    <img src="{{ user.profile.profile_picture }}" alt="profile picture" class="profile-picture">
+                    {% else %}
+                    <img src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="profile" class="profile-picture">
+                    {% endif %}
+
+                    <img src="https://cdn-icons-png.freepik.com/256/15768/15768411.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="edit" class="icon">
+                </label>
+                <input type="file" name="profile-picture" class="hide" id="profile-picture-upload">
+                <input type="submit" class="update-button hide" value="Change">
+            </form>
+
+            <h3>{{ user.profile.first_name }} {{ user.profile.last_name }}</h3>
+            <p class="email">{{ user.email }}</p>
+            <p class="role">{{ user.role }}</p>
+        </div>
+        
+        <div class="profile-info">
+            <h4>Personal Information</h4>
+            <div class="info-group">
+                <p><strong>Full Name:</strong> {{ user.profile.first_name }} {{ user.profile.last_name }}</p>
+                <p><strong>Username:</strong> {{ user.profile.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+
+            <h4>Contact Details</h4>
+            <div class="info-group">
+                <p><strong>Phone Number:</strong> {{ user.profile.phone_number }}</p>
+                <p><strong>Location:</strong> {{ location.city }}</p>
+            </div>
+
+            <h4>Security Settings</h4>
+            <div class="info-group">
+                <p><strong>Password:</strong> **********</p>
+                <a href="{{ url_for('change_password') }}" class="update-button">Update Password</a>
+            </div>
+
+            <h4>Profile Settings</h4>
+            <div class="info-group">
+                <a href="{{ url_for('edit_profile') }}" class="update-button">Update Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="activity-log">
+        <h4>Recent Activity</h4>
+        <ul>
+            <li>test</li>
+            <li>test</li>
+            <li>test</li>
+        </ul>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block script_tags %} 
+<script>
+    let profilePicUploadButton = document.querySelector('#profile-picture-upload');
+    let changeButton = document.querySelector('input.update-button');
+
+    profilePicUploadButton.addEventListener('change', (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+            let profilePic = document.querySelector('.profile-picture');
+            profilePic.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+        changeButton.classList.remove('hide');
+    });
+</script>
+{% endblock %}

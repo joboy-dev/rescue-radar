@@ -1,0 +1,33 @@
+<div class="responder">
+    <section class="summary-section">
+        <h3>Active Assignments</h3>
+        <div class="assignments">
+            {% for assignment in active_assignments %}
+            <div class="assignment-card">
+                <h4>{{ assignment.type }}</h4>
+                <p><strong>Location:</strong> {{ assignment.location }}</p>
+                <p><strong>Status:</strong> {{ assignment.status }}</p>
+                <button>Update Status</button>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    <section class="map-section">
+        <h3>Map View</h3>
+        <p>Current Location: {{ current_location }}</p>
+        <!-- Placeholder for map, e.g., Google Maps integration -->
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </section>
+    
+    <section class="recent-activity-section">
+        <h3>Recent Activity</h3>
+        <ul class="activity-log">
+            {% for activity in recent_activities %}
+            <li>{{ activity.date }} - {{ activity.description }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>

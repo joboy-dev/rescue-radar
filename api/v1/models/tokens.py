@@ -24,7 +24,7 @@ class Token(BaseTableModel):
         return self.expiry_time < sa.func.now()
 
 
-class BlackListedToken(BaseTableModel):
+class BlacklistedToken(BaseTableModel):
     __tablename__ = 'blacklisted_tokens'
     
     token = sa.Column(sa.String, nullable=False)

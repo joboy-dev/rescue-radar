@@ -31,5 +31,7 @@ class Settings(BaseSettings):
     DB_TYPE: str = config("DB_TYPE")
     DB_URL: str = config("DB_URL")
     
+    IPINFO_API_KEY: str = config("IPINFO_API_KEY")
+    
 
 settings = Settings()

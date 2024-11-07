@@ -23,5 +23,5 @@ class SelectRole(BaseModel):
 
 class TokenData(BaseModel):
 
-    id: Optional[str]
+    user_id: Optional[str]
     

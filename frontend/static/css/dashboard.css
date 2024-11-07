@@ -1,0 +1,159 @@
+h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black-color);
+}
+
+h2 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+h3 {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--black-color);
+}
+
+h1 span {
+    font-weight: 400;
+    color: var(--primary-color);
+}
+
+p {
+    font-size: 0.7rem;
+    color: var(--black-color);
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 65%;
+}
+
+.right-sidebar {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* PUBLIC ROLE */
+.greeting-quick-report {
+    /* margin-top: 11vh; */
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.public {
+    display: flex;
+    gap: 40px;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.safety-tips, .alerts-section, .map-section, .report-history, .emergency-contacts, .feedback-support {
+    background-color: var(--white-color);
+    padding: 15px 30px;
+    border-radius: 10px;
+    border: 2px solid var(--tertiary-color);
+    height: fit-content;
+}
+
+.tips-list, .alerts, .report-history ul, .emergency-contacts ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tips-list li, .alerts .alert, .report-history ul li, .emergency-contacts ul li {
+    margin: 5px 0;
+    font-size: 0.7rem;
+}
+
+.map-placeholder {
+    background: var(--white-color);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feedback-btn {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.6rem;
+}
+
+.status.resolved {
+    color: var(--success-color);
+}
+
+.status.in-progress {
+    color: var(--warning-color);
+}
+
+/* RESPONDER ROLE */
+
+
+/* AGENCY ADMIN ROLE */
+
+
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+
+/* TAB */
+
+@media screen and (max-width: 1024px) {
+    .public {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .main-content {
+        width: 70%;
+    }
+    
+    .right-sidebar {
+        width: 70%;
+    }
+}
+
+
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+
+/* MOBILE */
+
+@media screen and (max-width: 540px) {
+    .public {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+}

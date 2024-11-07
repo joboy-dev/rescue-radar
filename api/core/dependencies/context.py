@@ -4,6 +4,8 @@ from typing import Callable
 from fastapi import Request, Response
 from fastapi.responses import RedirectResponse
 
+from api.utils.location import get_ip_info
+
 
 def inject_context(request: Request):
     return {
@@ -24,6 +26,9 @@ def add_template_context(template_name: str):
             # Get additional context from the injected dependency
             context_data = inject_context(request)
             
+            # Get location information
+            location_info = get_ip_info(request)
+            
             # Run the route function to get extra context data from the function itself
             result = await func(request, *args, **kwargs)
             
@@ -34,6 +39,7 @@ def add_template_context(template_name: str):
             # Merge function data with context_data
             context = {
                 'page': template_name.split('/')[-1].replace('.html', ''),
+                'location': {**location_info},
                 **context_data, 
                 **result
             }

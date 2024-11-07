@@ -1,12 +1,9 @@
 {% extends 'components/base.html' %}
 
 {% block head_tags %}
-<link rel="stylesheet" href="/static/css/forms.css">
-<link rel="stylesheet" href="/static/css/auth-forms.css">
+<link rel="stylesheet" href="{{ url_for('static', path='css/forms.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/auth-forms.css') }}">
 {% endblock %}
-
-{% block form_styles %}{% endblock %}
-
 
 {% block content%}
 <section id="form" style="background: url('{{background_url}}'); background-size: cover; background-repeat: no-repeat;">
@@ -23,7 +20,22 @@
                 {% for field in form.fields %}
                 <div class="form-group">
                     <label for="{{ field.name }}">{{ field.label }} {% if field.required %}<span>*</span>{% endif %}</label>
-                    <input type="{{ field.type }}" id="{{ field.name }}" {% if field.required %}required{% endif %}>
+                    <input 
+                        type="{{ field.type }}" 
+                        id="{{ field.name }}" 
+                        name="{{ field.name }}" 
+                        {% if field.required %}required{% endif %}
+                        {% if field.readonly %}readonly{% endif %}
+                        {% if field.min_length %}minlength="{{ field.min_length }}"{% endif %}
+                        {% if field.value %}
+                            value="{{ field.value }}"
+                        {% else %}
+                            {% if form_data and field.type != 'password' %}
+                            value="{{ form_data.get(field.name) }}"
+                            placeholder="{{ field.placeholder }}"
+                            {% endif %}
+                        {% endif %}
+                    >
                 </div>
                 {% endfor %}
             {% endif %}

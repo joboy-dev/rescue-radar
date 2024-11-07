@@ -12,7 +12,8 @@ from fastapi import (
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.exc import IntegrityError
 
-from api.core.dependencies.context import add_template_context
+from api.core.dependencies.flash_messages import get_flashed_messages
+from api.core.dependencies.middleware import AuthMiddleware
 from api.utils.settings import settings
 from api.utils.logger import app_logger
 from api.v1.routes import v1_router
@@ -24,7 +25,8 @@ app = FastAPI(title='Rescue Radar')
 async def lifespan(app: FastAPI):
     yield
 
-# Set up session middleware
+# Set up middleware
+app.add_middleware(AuthMiddleware)
 app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
 
 # Middleware to log details after each request
@@ -58,6 +60,7 @@ async def log_requests(request: Request, call_next):
     
 # Set up frontend templates
 frontend = templating.Jinja2Templates('frontend/templates')
+frontend.env.globals['get_flashed_messages'] = get_flashed_messages
 
 # Mount static files
 app.mount("/static", staticfiles.StaticFiles(directory="frontend/static"), name="static")
@@ -71,15 +74,6 @@ async def http_exception(request: Request, exc: HTTPException):
 
     app_logger.info(f"HTTPException: {request.url.path} | {exc.status_code} | {exc.detail}")
 
-    # return JSONResponse(
-    #     status_code=exc.status_code,
-    #     content={
-    #         "status": False,
-    #         "status_code": exc.status_code,
-    #         "message": exc.detail,
-    #     },
-    # )
-
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception(request: Request, exc: RequestValidationError):
@@ -92,16 +86,6 @@ async def validation_exception(request: Request, exc: RequestValidationError):
 
     app_logger.info(f"RequestValidationError: {request.url.path} | {errors}")
 
-    # return JSONResponse(
-    #     status_code=422,
-    #     content={
-    #         "status": False,
-    #         "status_code": 422,
-    #         "message": "Invalid input",
-    #         "errors": errors,
-    #     },
-    # )
-
 
 @app.exception_handler(IntegrityError)
 async def integrity_exception(request: Request, exc: IntegrityError):
@@ -109,30 +93,12 @@ async def integrity_exception(request: Request, exc: IntegrityError):
 
     app_logger.info(f"Exception occured: {request.url.path} | 500 | {exc}")
 
-    # return JSONResponse(
-    #     status_code=500,
-    #     content={
-    #         "status": False,
-    #         "status_code": 500,
-    #         "message": f"An unexpected error occurred: {exc}",
-    #     },
-    # )
-
 
 @app.exception_handler(Exception)
 async def exception(request: Request, exc: Exception):
     """Other exception handlers"""
 
     app_logger.info(f"Exception occured | {request.url.path} | 500 | {exc}")
-
-    # return JSONResponse(
-    #     status_code=500,
-    #     content={
-    #         "status": False,
-    #         "status_code": 500,
-    #         "message": f"An unexpected error occurred: {exc}",
-    #     },
-    # )
 
 
 # Run app

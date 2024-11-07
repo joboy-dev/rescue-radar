@@ -24,4 +24,4 @@ class FinalReport(BaseTableModel):
     emergency_id = sa.Column(sa.String, sa.ForeignKey('emergencies.id'), nullable=False)
     
     emergency = relationship('Emergency', back_populates='final_report')
-    responders = relationship('Responder', secondary='emergency_responders')
+    responders = relationship('ResponderEmergency', back_populates='final_report') 

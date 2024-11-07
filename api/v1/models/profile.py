@@ -13,5 +13,6 @@ class Profile(BaseTableModel):
     first_name = sa.Column(sa.String, nullable=True)
     last_name = sa.Column(sa.String, nullable=True)
     profile_picture = sa.Column(sa.String, nullable=True)
-
+    
+    user_id = sa.Column(sa.String, sa.ForeignKey("users.id"), nullable=False)
     user = relationship('User', back_populates='profile')

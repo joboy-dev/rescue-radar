@@ -1,0 +1,11 @@
+{% for message in get_flashed_messages(request) %}
+<div class="flash-message {{ message.category }}">
+    <p>{{ message.message }}</p>
+</div>
+
+<script>
+    setTimeout(() => {
+        document.querySelector('.flash-message').remove();
+    }, 5000); // 3 seconds to display the message and then remove it from the DOM.
+</script>
+{% endfor %}

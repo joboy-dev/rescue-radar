@@ -85,17 +85,19 @@ class BaseTableModel(Base):
 
     @classmethod
     def fetch_one_by_field(self, **kwargs):
-        """Fetches all records that match the given field(s)"""
+        """Fetches one unique record that match the given field(s)"""
         
         db = next(get_db())
-        return db.query(self).filter_by(**kwargs, is_deleted=False).first()
+        kwargs["is_deleted"] = False
+        return db.query(self).filter_by(**kwargs).first()
     
     @classmethod
     def fetch_by_field(self, **kwargs):
         """Fetches all records that match the given field(s)"""
         
         db = next(get_db())
-        return db.query(self).filter_by(**kwargs, is_deleted=False).all()
+        kwargs["is_deleted"] = False
+        return db.query(self).filter_by(**kwargs).all()
 
     @classmethod
     def update(self, id: str, **kwargs):
