@@ -23,5 +23,5 @@ class Responder(BaseTableModel):
     agency_id = sa.Column(sa.String, sa.ForeignKey('agencies.id'))
     
     user = relationship('User', back_populates='responder_profile')    
-    agency = relationship('Agency', back_populates='responders')
+    agency = relationship('Agency', back_populates='responders', uselist=False)
     assigned_emergencies = relationship('ResponderEmergency', back_populates='responder')

@@ -9,4 +9,4 @@ from api.v1.models.resource import Resource, ResourceAllocation
 from api.v1.models.user import User
 from api.v1.models.analytics import DataAnalytics
 from api.v1.models.report import FinalReport
-
+from api.v1.models.location import Location, EmergencyLocation

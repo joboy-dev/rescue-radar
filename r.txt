@@ -22,4 +22,19 @@
                 
                 <!-- Preview area -->
                 <div id="preview" class="preview"></div>
-            </div> -->
+            </div>
+
+
+{'ip': '197.211.59.74', 'city': 'Lagos', 'region': 'Lagos', 'country': 'NG', 'loc': '6.4541,3.3947', 'org': 'AS37148 Globacom Limited', 'timezone': 'Africa/Lagos', 'country_name': 'Nigeria', 'isEU': False, 'country_flag_url': 'https://cdn.ipinfo.io/static/images/countries-flags/NG.svg', 'country_flag': {'emoji': '🇳🇬', 'unicode': 'U+1F1F3 U+1F1EC'}, 'country_currency': {'code': 'NGN', 'symbol': '₦'}, 'continent': {'code': 'AF', 'name': 'Africa'}, 'latitude': '6.4541', 'longitude': '3.3947'}
+
+
+    var popup = L.popup();
+
+    function onMapClick(e) {
+        popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(map);
+    }
+
+    map.on('click', onMapClick);

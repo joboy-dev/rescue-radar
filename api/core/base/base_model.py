@@ -165,6 +165,32 @@ class BaseTableModel(Base):
         return query.offset(offset).limit(per_page).all()
     
     @classmethod
+    def search(cls, search_fields: Dict[str, str], page: int = 1, per_page: int = 10):
+        """
+        Performs a search on the model based on the provided fields and values.
+
+        :param search_fields: A dictionary where keys are field names and values are search terms.
+        :param page: The page number for pagination (default is 1).
+        :param per_page: The number of records per page (default is 10).
+        :return: A list of matching records.
+        """
+        db = next(get_db())
+
+        # Start building the query
+        query = db.query(cls)
+
+        # Apply search filters
+        for field, value in search_fields.items():
+            query = query.filter(getattr(cls, field).ilike(f"%{value}%"))
+
+        # Exclude soft-deleted records
+        query = query.filter(cls.is_deleted == False)
+
+        # Apply pagination
+        offset = (page - 1) * per_page
+        return query.offset(offset).limit(per_page).all()
+    
+    @classmethod
     def fetch_with_join(
         self,
         related_model, 

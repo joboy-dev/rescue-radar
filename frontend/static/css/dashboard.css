@@ -8,6 +8,7 @@ h2 {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--primary-color);
+    margin-bottom: 20px;
 }
 
 h3 {
@@ -26,6 +27,38 @@ p {
     color: var(--black-color);
 }
 
+form {
+    margin: 10px 0;
+}
+
+form select {
+    height: 40px;
+    width: 250px;
+    padding: 5px;
+    border: 1px solid var(--primary-color);
+    outline: none;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+form select:focus {
+    border: 1px solid var(--secondary-color);
+}
+
+form input[type="submit"] {
+    height: 40px;
+    width: 100px;
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+    border: none;
+    outline: none;
+    color: var(--white-color);
+}
+
+form input[type="submit"]:hover {
+    background-color: var(--tertiary-color);
+}
+
 .main-content {
     display: flex;
     flex-direction: column;
@@ -39,6 +72,21 @@ p {
     display: flex;
     flex-direction: column;
     gap: 30px;
+}
+
+.dashboard-btn {
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.6rem;
+}
+
+.dashboard-btn:hover {
+    background-color: var(--tertiary-color);
 }
 
 /* PUBLIC ROLE */
@@ -80,21 +128,10 @@ p {
 
 .map-placeholder {
     background: var(--white-color);
-    height: 200px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.feedback-btn {
-    background-color: var(--secondary-color);
-    color: var(--white-color);
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.6rem;
 }
 
 .status.resolved {
@@ -106,10 +143,113 @@ p {
 }
 
 /* RESPONDER ROLE */
+.assignment-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.assignments, .recent-activity-section {
+    margin: 20px 0;
+    border: 2px solid var(--tertiary-color);
+    border-radius: 10px;
+    padding: 15px;
+    width: 100%;
+}
+
+.assignment-card {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+}
+
+.map-section .map-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+li {
+    list-style: none;
+    color: var(--black-color);
+    font-size: 0.7rem;
+}
 
 
 /* AGENCY ADMIN ROLE */
+.kpi-section, .active-emergencies-section, .resources-section, .analytics-section {
+    margin: 20px 0;
+}
 
+.kpi-cards {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    height: fit-content;
+}
+
+.kpi-card {
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid var(--tertiary-color);
+    text-align: center;
+    width: 20%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+div.resource .kpi-card:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.emergencies-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.emergencies-table th, .emergencies-table td {
+    border: 1px solid var(--tertiary-color);
+    padding: 8px;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--black-color);
+}
+
+.charts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.chart {
+    border: 2px solid var(--tertiary-color);
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+}
+
+.chart h3 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.chart canvas {
+    border-radius: 20px;
+    width: 100%;
+    height: 300px;
+}
 
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */
@@ -132,6 +272,19 @@ p {
     .right-sidebar {
         width: 70%;
     }
+
+    .chart {
+        width: 70%;
+    }
+
+    .kpi-cards {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kpi-card {
+        width: 40%;
+    } 
 }
 
 
@@ -156,4 +309,17 @@ p {
     .right-sidebar {
         width: 100%;
     }
+
+    .chart {
+        width: 100%;
+    }
+
+    .kpi-cards {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kpi-card {
+        width: 40%;
+    } 
 }

@@ -12,7 +12,7 @@
     
     <div class="profile-details">
         <div class="profile-card">
-            <form action="" class="upload-pic-form" enctype="multipart/form-data">
+            <form action="/profile/upload-picture" class="upload-pic-form" enctype="multipart/form-data" method="post">
                 <label for="profile-picture-upload">
                     {% if user.profile.profile_picture %}
                     <img src="{{ user.profile.profile_picture }}" alt="profile picture" class="profile-picture">
@@ -22,7 +22,7 @@
 
                     <img src="https://cdn-icons-png.freepik.com/256/15768/15768411.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="edit" class="icon">
                 </label>
-                <input type="file" name="profile-picture" class="hide" id="profile-picture-upload">
+                <input type="file" name="picture" accept="image/*" class="hide" id="profile-picture-upload">
                 <input type="submit" class="update-button hide" value="Change">
             </form>
 
@@ -42,13 +42,14 @@
             <h4>Contact Details</h4>
             <div class="info-group">
                 <p><strong>Phone Number:</strong> {{ user.profile.phone_number }}</p>
-                <p><strong>Location:</strong> {{ location.city }}</p>
+                <p><strong>Location:</strong> {{ location.city }}, {{ location.country_name }}</p>
             </div>
 
             <h4>Security Settings</h4>
             <div class="info-group">
                 <p><strong>Password:</strong> **********</p>
                 <a href="{{ url_for('change_password') }}" class="update-button">Update Password</a>
+                <!-- <a href="{{ url_for('change_password') }}" class="update-button">Change email</a> -->
             </div>
 
             <h4>Profile Settings</h4>
@@ -58,14 +59,14 @@
         </div>
     </div>
 
-    <div class="activity-log">
+    <!-- <div class="activity-log">
         <h4>Recent Activity</h4>
         <ul>
             <li>test</li>
             <li>test</li>
             <li>test</li>
         </ul>
-    </div>
+    </div> -->
 </section>
 
 {% endblock %}

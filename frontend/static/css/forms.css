@@ -81,13 +81,14 @@ label span {
     color: var(--secondary-color);
 }
 
-.form-group input {
+.form-group input, .form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--black-color);
     border-radius: 10px;
     font-size: 0.6rem;
     outline: none;
+    background-color: transparent;
 }
 
 .form-group textarea {
@@ -99,7 +100,7 @@ label span {
     outline: none;
 }
 
-.form-group input:focus, .form-group textarea:focus {
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     border: 1px solid var(--secondary-color);
     border-radius: 10px;
 }
@@ -130,6 +131,7 @@ input[type=submit]:hover {
     padding: 10px 0;
     border: 1px dashed var(--primary-color);
     border-radius: 10px;
+    width: 100%;
 }
 
 .file-upload-container label.custom-file-upload {

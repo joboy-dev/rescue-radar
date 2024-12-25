@@ -9,7 +9,7 @@ class Profile(BaseTableModel):
 
     username = sa.Column(sa.String, nullable=True, unique=True)
     country_code = sa.Column(sa.String, nullable=True)
-    phone_number = sa.Column(sa.String(15), nullable=True)
+    phone_number = sa.Column(sa.String, nullable=True)
     first_name = sa.Column(sa.String, nullable=True)
     last_name = sa.Column(sa.String, nullable=True)
     profile_picture = sa.Column(sa.String, nullable=True)

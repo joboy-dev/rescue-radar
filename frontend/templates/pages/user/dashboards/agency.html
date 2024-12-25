@@ -1,0 +1,106 @@
+<div class="dashboard admin-dashboard">
+    <div class="kpi-section">
+        <h2>Dashboard Summary</h2>
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <h3>Total Emergencies This Month</h3>
+                <p>20</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Average Response Time</h3>
+                <p>3 mins</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="active-emergencies-section">
+        <h2>Active Emergencies</h2>
+        <table class="emergencies-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Responder</th>
+                    <th>Priority</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fire</td>
+                    <td>Lagos</td>
+                    <td>Mo Salah</td>
+                    <td>High</td>
+                    <td>
+                        <button class="dashboard-btn reassign">Reassign</button>
+                        <form action="" class="reassign-form hide">
+                            <label for="assignment-reassign">
+                                <select name="responder" id="assignment-reassign">
+                                    <option value="available">Available</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </label>
+                            <input type="submit" value="Reassign">
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="kpi-section resource">
+        <h2>Resource & Responder Management</h2>
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <h3>Total Responders</h3>
+                <p>30</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Active Responders</h3>
+                <p>25</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Available Responders</h3>
+                <p>5</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Deployed Vehicles</h3>
+                <p>20</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="analytics-section">
+        <h2>Performance Metrics</h2>
+        <div class="charts">
+            <div class="chart">
+                <h3>Response Time Breakdown</h3>
+                <!-- Placeholder for chart, e.g., Chart.js integration -->
+                <canvas id="response-time-chart"></canvas>
+            </div>
+            <div class="chart">
+                <h3>Emergency Trends</h3>
+                <canvas id="emergency-trend-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let dashboardButton = document.querySelector('button.reassign');
+    let reasignForm = document.querySelector('form.reassign-form');
+
+    dashboardButton.addEventListener('click', () => {
+        if (reasignForm.classList.contains('hide')) {
+            reasignForm.classList.remove('hide');
+            dashboardButton.innerHTML = 'Cancel';
+            dashboardButton.style.backgroundColor = '#D22626';
+        } else {
+            reasignForm.classList.add('hide');
+            dashboardButton.innerHTML = 'Reassign';
+            dashboardButton.style.backgroundColor = '#FC924B';
+        }
+    });
+</script>

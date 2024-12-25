@@ -1,33 +1,58 @@
 <div class="responder">
-    <section class="summary-section">
-        <h3>Active Assignments</h3>
+    <div class="summary-section">
         <div class="assignments">
-            {% for assignment in active_assignments %}
+            <h2>Active Assignments</h2>
             <div class="assignment-card">
-                <h4>{{ assignment.type }}</h4>
-                <p><strong>Location:</strong> {{ assignment.location }}</p>
-                <p><strong>Status:</strong> {{ assignment.status }}</p>
-                <button>Update Status</button>
+                <h3 class="assignment-name">Fire</h3>
+                <p><strong>Location:</strong> Lagos</p>
+                <p><strong>Status:</strong> Available</p>
+                <button class="dashboard-btn status">Update Status</button>
+
+                <form action="" class="update-status hide">
+                    <label for="assignment-status">
+                        <select name="assignment-status" id="assignment-status">
+                            <option value="available">Available</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </label>
+                    <input type="submit" value="Update">
+                </form>
             </div>
-            {% endfor %}
         </div>
-    </section>
+    </div>
     
-    <section class="map-section">
-        <h3>Map View</h3>
-        <p>Current Location: {{ current_location }}</p>
+    <div class="map-section">
+        <h2>Map View</h2>
+        <!-- <p>Current Location: {{ current_location }}</p> -->
+        <p>Current Location: Lagos</p>
         <!-- Placeholder for map, e.g., Google Maps integration -->
         <div class="map-container">
             <iframe src="https://www.google.com/maps/embed" frameborder="0" allowfullscreen></iframe>
         </div>
-    </section>
+    </div>
     
-    <section class="recent-activity-section">
-        <h3>Recent Activity</h3>
+    <div class="recent-activity-section">
+        <h2>Recent Activity</h2>
         <ul class="activity-log">
-            {% for activity in recent_activities %}
-            <li>{{ activity.date }} - {{ activity.description }}</li>
-            {% endfor %}
+            <li>Test stuff</li>
         </ul>
-    </section>
+    </div>
 </div>
+
+<script>
+    let dashboardButton = document.querySelector('button.status');
+    let updateStatusForm = document.querySelector('form.update-status');
+
+    dashboardButton.addEventListener('click', () => {
+        if (updateStatusForm.classList.contains('hide')) {
+            updateStatusForm.classList.remove('hide');
+            dashboardButton.innerHTML = 'Cancel';
+            dashboardButton.style.backgroundColor = '#D22626';
+        } else {
+            updateStatusForm.classList.add('hide');
+            dashboardButton.innerHTML = 'Update Status';
+            dashboardButton.style.backgroundColor = '#FC924B';
+        }
+    });
+</script>

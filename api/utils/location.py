@@ -1,6 +1,4 @@
-import os, ipinfo
-from pathlib import Path
-from dotenv import load_dotenv
+import ipinfo
 from fastapi import Request
 
 from api.utils.settings import settings

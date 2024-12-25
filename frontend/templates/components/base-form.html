@@ -20,6 +20,7 @@
                 {% for field in form.fields %}
                 <div class="form-group">
                     <label for="{{ field.name }}">{{ field.label }} {% if field.required %}<span>*</span>{% endif %}</label>
+                    {% if field.type != 'textarea' and field.type != 'select' %}
                     <input 
                         type="{{ field.type }}" 
                         id="{{ field.name }}" 
@@ -36,6 +37,27 @@
                             {% endif %}
                         {% endif %}
                     >
+
+                    {% elif field.type == 'textarea' %}
+                    <textarea 
+                        id="{{ field.name }}" 
+                        name="{{ field.name }}" 
+                        {% if field.required %}required{% endif %}
+                        {% if field.readonly %}readonly{% endif %}
+                        {% if field.min_length %}minlength="{{ field.min_length }}"{% endif %}
+                    >
+                        {% if form_data and field.name in form_data %}
+                        {{ form_data.get(field.name) }}
+                        {% endif %}
+                    </textarea>
+
+                    {% elif field.type == 'select' %}
+                    <select id="{{ field.name }}" name="{{ field.name }}">
+                        {% for option in field.options %}
+                        <option value="{{ option.value }}" {% if field.value == option.value %}selected{% endif %}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
                 </div>
                 {% endfor %}
             {% endif %}
@@ -50,9 +72,4 @@
         </div>
     </form>
 </section>
-{% endblock %}
-
-{% block script_tags %} 
-<script src="/static/js/fileUpload.js"></script>
-<script src="/static/js/roleSelect.js"></script>
 {% endblock %}

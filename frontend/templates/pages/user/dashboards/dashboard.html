@@ -1,7 +1,7 @@
 {% extends 'components/base.html' %}
 
 {% block head_tags %}
-<link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
     {% if user.role == 'Public' %}
         {% include 'pages/user/dashboards/public.html' %}
     {% elif user.role == 'Responder' %}
-        {% include 'pages/user/dashboards/public.html' %}
+        {% include 'pages/user/dashboards/responder.html' %}
     {% elif user.role == 'Agency admin' %}
         {% include 'pages/user/dashboards/agency.html' %}
     {% endif %}

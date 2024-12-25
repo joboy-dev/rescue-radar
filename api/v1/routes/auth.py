@@ -4,6 +4,7 @@ from fastapi.responses import RedirectResponse
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
+from api.v1.models.profile import Profile
 from api.v1.models.user import User
 from api.v1.services.auth import AuthService
 
@@ -148,6 +149,9 @@ async def signup(request: Request):
             password=hashed_password,
             role=None
         )
+        
+        # Create profile for user
+        Profile.create(user_id=new_user.id)
         
         # Create access token and store in cookies
         access_token = AuthService.create_access_token(user_id=new_user.id)

@@ -2,7 +2,7 @@
 <div class="greeting-quick-report">
     <h1>Welcome, <span>{{ user.email }}</span></h1>
     <p>Stay prepared and safe. Report emergencies or browse safety tips below.</p>
-    <a href="#" class="btn">Report an Emergency</a>
+    <a href="{{ url_for('report_emergency') }}" class="btn">Report an Emergency</a>
 </div>
 
 <div class="public">
@@ -16,7 +16,7 @@
                 <li>💡 Natural Disasters: How to Stay Safe During Floods</li>
                 <!-- Add more tips here -->
             </ul>
-            <a href="#" class="feedback-btn">View more</a>
+            <a href="#" class="dashboard-btn">View more</a>
             <!-- <a href="/resources" class="view-all">View All Tips</a> -->
         </div>
     
@@ -36,7 +36,7 @@
                 </div>
                 <!-- Add more alerts here -->
             </div>
-            <a href="#" class="feedback-btn">View more</a>
+            <a href="#" class="dashboard-btn">View more</a>
         </div>
     
         <!-- Map View of Local Resources -->
@@ -44,7 +44,8 @@
             <h2>Emergency Resources Near You</h2>
             <div class="map-placeholder">
                 <!-- Embed map or image here -->
-                <p>[Map showing nearby resources like hospitals, police, etc.]</p>
+                {% include 'components/map.html' %}
+                <!-- <p>[Map showing nearby resources like hospitals, police, etc.]</p> -->
             </div>
         </div>
     </div>
@@ -59,7 +60,7 @@
                 <li>🚑 Medical Assistance on Oct 19 - <span class="status in-progress">In Progress</span></li>
                 <!-- Add more history here -->
             </ul>
-            <a href="#" class="feedback-btn">View more</a>
+            <a href="#" class="dashboard-btn">View more</a>
         </div>
     
         <!-- Emergency Contacts -->
@@ -77,7 +78,7 @@
         <div class="feedback-support">
             <h2>Feedback & Support</h2>
             <p>Let us know how we can improve your experience.</p>
-            <a href="#" class="feedback-btn">Submit Feedback</a>
+            <a href="#" class="dashboard-btn">Submit Feedback</a>
         </div>
     </div>
 </div>

@@ -26,7 +26,7 @@ def upgrade() -> None:
     op.create_table('profile',
     sa.Column('username', sa.String(), nullable=True),
     sa.Column('country_code', sa.String(), nullable=True),
-    sa.Column('phone_number', sa.String(length=15), nullable=True),
+    sa.Column('phone_number', sa.String(), nullable=True),
     sa.Column('first_name', sa.String(), nullable=True),
     sa.Column('last_name', sa.String(), nullable=True),
     sa.Column('profile_picture', sa.String(), nullable=True),

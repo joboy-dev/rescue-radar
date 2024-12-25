@@ -261,6 +261,13 @@ nav .search-bar button img.icon {
     background-size: cover;
 }
 
+/* MAP */
+#map {
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+}
+
 
 /* MAIN CONTENT */
 /* main {

@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, File, HTTPException, Request, UploadFile
 from fastapi.responses import RedirectResponse
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
+from api.utils.firebase_service import FirebaseService
 from api.v1.models.profile import Profile
 from api.v1.models.user import User
 from api.v1.services.auth import AuthService
@@ -212,3 +213,28 @@ async def change_password(request: Request):
     
     return context
 
+
+
+@user_router.api_route('/profile/upload-picture', methods=["POST"])
+async def update_profile_picture(
+    request: Request, 
+    picture: UploadFile
+):
+    '''Endpoint to update user profile picture'''
+    
+    current_user = request.state.current_user
+    profile = Profile.fetch_one_by_field(user_id=current_user.id)
+    
+    picture_url = await FirebaseService.upload_file(
+        file=picture,
+        allowed_extensions=['jpg', 'png', 'jpeg', 'gif'],
+        upload_folder='users',
+        model_id=current_user.id
+    )
+    
+    Profile.update(id=profile.id, profile_picture=picture_url)
+    
+    flash(request, 'Picture updated successfully', MessageCategory.SUCCESS)
+    
+    return RedirectResponse('/profile', 303)
+    

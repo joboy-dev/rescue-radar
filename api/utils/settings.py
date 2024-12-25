@@ -33,5 +33,6 @@ class Settings(BaseSettings):
     
     IPINFO_API_KEY: str = config("IPINFO_API_KEY")
     
+    TEMP_DIR: str = os.path.join(Path(__file__).resolve().parent.parent.parent, 'tmp', 'media') 
 
 settings = Settings()

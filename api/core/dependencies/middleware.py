@@ -23,9 +23,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             "/settings", 
             '/logout',
             '/select-role',
-            '/profile',
             '/profile/edit',
             '/profile/change-password',
+            '/profile/upload-picture',
         ]  # Define more as needed
 
         # Check access token in cookies
@@ -75,6 +75,18 @@ class AuthMiddleware(BaseHTTPMiddleware):
             except HTTPException as e:
                 flash(request, e.detail, MessageCategory.ERROR)
                 return RedirectResponse(url="/login", status_code=303)
+        
+        # If route is not protected or unauthenticated, proceed with request
+        # Works for both authenticated and unauthenticated users
+        else:
+            user = None
+            
+            if access_token:
+                token = AuthService.verify_access_token(access_token, credentials_exception)
+                user = User.fetch_by_id(token.user_id)
+            
+            # Attach user to request state for access in route
+            request.state.current_user = user
             
         # Proceed with request if no redirection is needed
         response = await call_next(request)
