@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
 from api.v1.services.auth import AuthService

@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import sqlalchemy as sa
+from sqlalchemy.orm import Session
 from uuid import uuid4
 
 from api.db.database import Base, get_db
@@ -41,10 +42,10 @@ class BaseTableModel(Base):
         return obj_dict
 
     @classmethod
-    def create(self, **kwargs):
+    def create(self, db: Session, **kwargs):
         """Creates a new instance of the model"""
         
-        db = next(get_db())
+        # db = next(get_db())
         
         obj = self(**kwargs)
         db.add(obj)
@@ -55,6 +56,7 @@ class BaseTableModel(Base):
     @classmethod
     def all(
         self, 
+        db: Session,
         page: int = 1, 
         per_page: int = 10, 
         sort_by: str = "created_at", 
@@ -63,7 +65,7 @@ class BaseTableModel(Base):
     ):
         """Fetches all instances with pagination and sorting"""
         
-        db = next(get_db())
+        # db = next(get_db())
         query = db.query(self).filter_by(is_deleted=False) if not show_deleted else db.query(self)
 
         # Handle sorting
@@ -77,33 +79,33 @@ class BaseTableModel(Base):
         return query.offset(offset).limit(per_page).all()
 
     @classmethod
-    def fetch_by_id(self, id: str):
+    def fetch_by_id(self, db: Session, id: str):
         """Fetches a single instance by ID (ignores soft-deleted records)"""
         
-        db = next(get_db())
+        # db = next(get_db())
         return db.query(self).filter_by(id=id, is_deleted=False).first()
 
     @classmethod
-    def fetch_one_by_field(self, **kwargs):
+    def fetch_one_by_field(self, db: Session, **kwargs):
         """Fetches one unique record that match the given field(s)"""
         
-        db = next(get_db())
+        # db = next(get_db())
         kwargs["is_deleted"] = False
         return db.query(self).filter_by(**kwargs).first()
     
     @classmethod
-    def fetch_by_field(self, **kwargs):
+    def fetch_by_field(self, db: Session, **kwargs):
         """Fetches all records that match the given field(s)"""
         
-        db = next(get_db())
+        # db = next(get_db())
         kwargs["is_deleted"] = False
         return db.query(self).filter_by(**kwargs).all()
 
     @classmethod
-    def update(self, id: str, **kwargs):
+    def update(self, db: Session, id: str, **kwargs):
         """Updates an instance with the given ID"""
         
-        db = next(get_db())
+        # db = next(get_db())
         obj = db.query(self).filter_by(id=id, is_deleted=False).first()
         if not obj:
             return None  # Return None if the object isn't found
@@ -114,20 +116,20 @@ class BaseTableModel(Base):
         return obj
 
     @classmethod
-    def soft_delete(self, id: str):
+    def soft_delete(self, db: Session, id: str):
         """Performs a soft delete by setting is_deleted to the current timestamp"""
         
-        db = next(get_db())
+        # db = next(get_db())
         obj = db.query(self).filter_by(id=id, is_deleted=False).first()
         if obj:
             obj.is_deleted = True
             db.commit()
 
     @classmethod
-    def hard_delete(self, id: str):
+    def hard_delete(self, db: Session, id: str):
         """Permanently deletes an instance by ID"""
         
-        db = next(get_db())
+        # db = next(get_db())
         obj = db.query(self).filter_by(id=id).first()
         if obj:
             db.delete(obj)
@@ -136,6 +138,7 @@ class BaseTableModel(Base):
     @classmethod
     def custom_query(
         self, 
+        db: Session,
         filters: Dict[str, Any] = {}, 
         sort_by: str = "created_at", 
         order: str = "desc", 
@@ -144,7 +147,7 @@ class BaseTableModel(Base):
     ):
         """Custom query with filtering, sorting, and pagination"""
         
-        db = next(get_db())
+        # db = next(get_db())
         
         query = db.query(self)
         # Apply filters
@@ -165,7 +168,13 @@ class BaseTableModel(Base):
         return query.offset(offset).limit(per_page).all()
     
     @classmethod
-    def search(cls, search_fields: Dict[str, str], page: int = 1, per_page: int = 10):
+    def search(
+        cls, 
+        db: Session,
+        search_fields: Dict[str, str], 
+        page: int = 1, 
+        per_page: int = 10
+    ):
         """
         Performs a search on the model based on the provided fields and values.
 
@@ -174,7 +183,8 @@ class BaseTableModel(Base):
         :param per_page: The number of records per page (default is 10).
         :return: A list of matching records.
         """
-        db = next(get_db())
+        
+        # db = next(get_db())
 
         # Start building the query
         query = db.query(cls)
@@ -193,6 +203,7 @@ class BaseTableModel(Base):
     @classmethod
     def fetch_with_join(
         self,
+        db: Session,
         related_model, 
         join_field: str, 
         page: int = 1, 
@@ -213,7 +224,7 @@ class BaseTableModel(Base):
         :param kwargs: Optional filter parameters
         """
         
-        db = next(get_db())
+        # db = next(get_db())
 
         # Construct the join condition
         query = db.query(self).join(related_model, join_field)

@@ -1,6 +1,9 @@
-from fastapi import HTTPException, Request
+from fastapi import Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from sqlalchemy.orm import Session
+
+from api.db.database import get_db
 from api.v1.models.user import User
 from api.v1.services.auth import AuthService
 from api.core.dependencies.flash_messages import flash, MessageCategory
@@ -8,6 +11,7 @@ from api.core.dependencies.flash_messages import flash, MessageCategory
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        db = next(get_db())
         
         credentials_exception = HTTPException(
             status_code=401,
@@ -40,8 +44,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
             # Verify token
             try:
-                token = AuthService.verify_access_token(access_token, credentials_exception)
-                user = User.fetch_by_id(token.user_id)
+                token = AuthService.verify_access_token(db=db, access_token=access_token, credentials_exception=credentials_exception)
+                user = User.fetch_by_id(db=db, id=token.user_id)
                 
                 if not user:
                     flash(request, 'Session expired. Please login again.', MessageCategory.ERROR)
@@ -70,7 +74,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         # If route is for unauthenticated users only, redirect authenticated users
         elif request.url.path in unauthenticated_only_routes:
             try:
-                if access_token and AuthService.verify_access_token(access_token, credentials_exception):
+                if access_token and AuthService.verify_access_token(db=db, access_token=access_token, credentials_exception=credentials_exception):
                     return RedirectResponse(url="/dashboard", status_code=303)
             except HTTPException as e:
                 flash(request, e.detail, MessageCategory.ERROR)
@@ -82,8 +86,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
             user = None
             
             if access_token:
-                token = AuthService.verify_access_token(access_token, credentials_exception)
-                user = User.fetch_by_id(token.user_id)
+                token = AuthService.verify_access_token(db=db, access_token=access_token, credentials_exception=credentials_exception)
+                user = User.fetch_by_id(db=db, id=token.user_id)
             
             # Attach user to request state for access in route
             request.state.current_user = user

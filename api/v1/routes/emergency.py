@@ -1,10 +1,12 @@
 from typing import List, Optional
-from fastapi import APIRouter, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, File, HTTPException, Request, UploadFile, Depends
 from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
+from api.db.database import get_db
 from api.utils.firebase_service import FirebaseService
 from api.v1.models.profile import Profile
 from api.v1.models.user import User
@@ -18,7 +20,8 @@ emergency_router = APIRouter(prefix='/emergencies')
 @add_template_context('pages/emergency/report-emergency.html')
 async def report_emergency(
     request: Request,
-    pictures: Optional[List[UploadFile]] = None
+    pictures: Optional[List[UploadFile]] = None, 
+    db: Session=Depends(get_db)
 ):
     
     current_user = request.state.current_user

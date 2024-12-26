@@ -24,6 +24,8 @@ def seed_fire_locations():
                 city=properties['lga_name'],
                 state=properties['state_name'],
                 country='Nigeria',
+                latitude=properties['latitude'],
+                longitude=properties['longitude'],
                 geo_location=point,  # Use PostgreSQL's GEOMETRY data type for storing latitude and longitude
             )
             print(f'New emergency location added: {emergency_location.to_dict()}')
@@ -35,16 +37,18 @@ def seed_police_locations():
         locations = json.load(f)['features']
         
         for location in locations:
-            coordinates = location['geometry']['coordinates']
+            coordinates = location['geometry']['coordinates']  # Format: [longitude, latitude]
             properties = location['properties']
             
-            point = from_shape(Point(coordinates[0], coordinates[1]))  # Latitude, Longitude
+            point = from_shape(Point(coordinates[1], coordinates[0]))  # Latitude, Longitude
             emergency_location = EmergencyLocation.create(
                 name=properties['plc_st_nam'],
                 type='Police Station',
                 city=properties['lganame'],
                 state=properties['statename'],
                 country='Nigeria',
+                latitude=coordinates[1],
+                longitude=coordinates[0],
                 geo_location=point,  # Use PostgreSQL's GEOMETRY data type for storing latitude and longitude
             )
             print(f'New emergency location added: {emergency_location.to_dict()}')
@@ -56,16 +60,18 @@ def seed_health_locations():
         locations = json.load(f)['features']
         
         for location in locations:
-            coordinates = location['geometry']['coordinates']
+            coordinates = location['geometry']['coordinates']  # Format: [longitude, latitude]
             properties = location['properties']
         
-            point = from_shape(Point(coordinates[0], coordinates[1]))  # Latitude, Longitude
+            point = from_shape(Point(coordinates[1], coordinates[0]))  # Latitude, Longitude
             emergency_location = EmergencyLocation.create(
                 name=properties['name'],
                 type='Health',
                 city=properties['lga_name'],
                 state=properties['state_name'],
                 country='Nigeria',
+                latitude=coordinates[1],
+                longitude=coordinates[0],
                 geo_location=point,  # Use PostgreSQL's GEOMETRY data type for storing latitude and longitude
             )
             print(f'New emergency location added: {emergency_location.to_dict()}')

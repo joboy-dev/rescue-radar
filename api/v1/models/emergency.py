@@ -30,6 +30,8 @@ class Emergency(BaseTableModel):
     __tablename__ = 'emergencies'
 
     description = sa.Column(sa.String, nullable=True)
+    latitude = sa.Column(sa.Float, nullable=True)
+    longitude = sa.Column(sa.Float, nullable=True)
     location = sa.Column(gal.Geometry('POINT'), nullable=False)  # Spatial data (latitude, longitude)
     event_type = sa.Column(sa.String, server_default=EventType.ACCIDENT.value) 
     status = sa.Column(sa.String, server_default=EventStatus.PENDING.value)

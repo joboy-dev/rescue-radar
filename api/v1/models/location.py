@@ -10,6 +10,8 @@ class Location(BaseTableModel):
     city = sa.Column(sa.String, nullable=False)
     state = sa.Column(sa.String, nullable=False)
     country = sa.Column(sa.String, nullable=False)
+    latitude = sa.Column(sa.Float, nullable=True)
+    longitude = sa.Column(sa.Float, nullable=True)
     geo_location = sa.Column(gal.Geometry('POINT'), nullable=False)  # Spatial data (latitude, longitude)
 
 
@@ -21,4 +23,6 @@ class EmergencyLocation(BaseTableModel):
     city = sa.Column(sa.String, nullable=True)
     state = sa.Column(sa.String, nullable=True)
     country = sa.Column(sa.String, nullable=False)
+    latitude = sa.Column(sa.Float, nullable=True)
+    longitude = sa.Column(sa.Float, nullable=True)
     geo_location = sa.Column(gal.Geometry('POINT'), nullable=False)  # Spatial data (latitude, longitude)

@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
 from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
+from api.db.database import get_db
 from api.v1.models.profile import Profile
 from api.v1.models.user import User
 from api.v1.services.auth import AuthService
@@ -13,7 +15,7 @@ auth_router = APIRouter()
 
 @auth_router.api_route('/login', methods=["GET", "POST"])
 @add_template_context('pages/auth/login.html')
-async def login(request: Request):
+async def login(request: Request, db: Session = Depends(get_db)):
     '''Endpoint to log in a user'''
     
     form = build_form(
@@ -56,10 +58,10 @@ async def login(request: Request):
         password = form_data.get('password')
         
         try:
-            user = AuthService.authenticate_user(email, password)
+            user = AuthService.authenticate_user(db=db, email=email, password=password)
             
-            access_token = AuthService.create_access_token(user_id=user.id)
-            refresh_token = AuthService.create_refresh_token(user_id=user.id)
+            access_token = AuthService.create_access_token(db=db,user_id=user.id)
+            refresh_token = AuthService.create_refresh_token(db=db, user_id=user.id)
             
             response = RedirectResponse(url="/dashboard", status_code=303)
             response.set_cookie(key="access_token", value=access_token, httponly=True)
@@ -80,7 +82,7 @@ async def login(request: Request):
 
 @auth_router.api_route('/signup', methods=["GET", "POST"])
 @add_template_context('pages/auth/signup.html')
-async def signup(request: Request):   
+async def signup(request: Request, db: Session = Depends(get_db)):   
     '''Endpoint to sign up a user'''
      
     form = build_form(
@@ -135,7 +137,7 @@ async def signup(request: Request):
             return context
 
         # Check if user amready exists
-        existing_user = User.fetch_one_by_field(email=email)
+        existing_user = User.fetch_one_by_field(db=db, email=email)
         if existing_user:
             flash(request, 'Email address already in use. Try another email', MessageCategory.ERROR)
             return context
@@ -145,17 +147,18 @@ async def signup(request: Request):
         
         # Create user
         new_user = User.create(
+            db=db,
             email=email,
             password=hashed_password,
             role=None
         )
         
         # Create profile for user
-        Profile.create(user_id=new_user.id)
+        Profile.create(db=db, user_id=new_user.id)
         
         # Create access token and store in cookies
-        access_token = AuthService.create_access_token(user_id=new_user.id)
-        refresh_token = AuthService.create_refresh_token(user_id=new_user.id)
+        access_token = AuthService.create_access_token(db=db, user_id=new_user.id)
+        refresh_token = AuthService.create_refresh_token(db=db, user_id=new_user.id)
         
         response = RedirectResponse(url="/select-role", status_code=303)
         response.set_cookie(key="access_token", value=access_token, httponly=True)
@@ -170,7 +173,7 @@ async def signup(request: Request):
 
 @auth_router.api_route('/select-role', methods=["GET", "POST"])
 @add_template_context('pages/auth/select-role.html')
-async def select_role(request: Request):
+async def select_role(request: Request, db: Session = Depends(get_db)):
     '''Endpoint for a user to seect thie role in the system'''
     
     form = build_form(
@@ -212,7 +215,7 @@ async def select_role(request: Request):
         
         role = form_data.get('role')
         
-        User.update(request.state.current_user.id, role=role)
+        User.update(db, request.state.current_user.id, role=role)
 
         # Redirect after successful signup
         return RedirectResponse(url="/dashboard", status_code=303)

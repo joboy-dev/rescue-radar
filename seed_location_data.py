@@ -21,6 +21,8 @@ for file in city_files:
                 city=city['name'],
                 state=city['region'],
                 country=city['country'],
+                latitude=city['lat'],
+                longitude=city['long'],
                 geo_location=point,  # Use PostgreSQL's GEOMETRY data type for storing latitude and longitude
             )
             print(f'New location added: {location.to_dict()}')

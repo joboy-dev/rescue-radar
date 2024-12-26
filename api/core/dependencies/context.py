@@ -2,9 +2,13 @@ import datetime as dt
 from functools import wraps
 from typing import Callable
 from fastapi import Request, Response
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import RedirectResponse
+from geoalchemy2.functions import ST_GeogFromWKB
 
+from api.db.database import get_db
 from api.utils.location import get_ip_info
+from api.v1.models.location import EmergencyLocation
 
 
 def inject_context(request: Request):
@@ -22,7 +26,7 @@ def add_template_context(template_name: str):
         @wraps(func)
         async def wrapper(request: Request, *args, **kwargs) -> Response:
             from main import frontend
-            
+                        
             # Get additional context from the injected dependency
             context_data = inject_context(request)
             
