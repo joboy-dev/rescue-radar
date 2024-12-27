@@ -1,0 +1,96 @@
+<div class="agency-dashboard">
+    <aside class="sidebar">
+        <h2>Agency Panel</h2>
+        <ul>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#responders">Responders</a></li>
+            <li><a href="#add-responder">Add Responder</a></li>
+            <li><a href="#settings">Settings</a></li>
+            <li><a href="#reports">Reports</a></li>
+            <li><a href="#logout">Logout</a></li>
+        </ul>
+    </aside>
+    <main class="content">
+        <header>
+            <h1>Welcome, Agency Admin</h1>
+            <p>Manage your responders and emergency operations effectively.</p>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard">
+            <h2>Dashboard Overview</h2>
+            <div class="overview">
+                <div class="card">
+                    <h3>Total Responders</h3>
+                    <p>15</p>
+                </div>
+                <div class="card">
+                    <h3>Ongoing Emergencies</h3>
+                    <p>3</p>
+                </div>
+                <div class="card">
+                    <h3>Resolved Cases</h3>
+                    <p>120</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responders Section -->
+        <section id="responders">
+            <h2>All Responders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>Available</td>
+                        <td>08012345678</td>
+                        <td>
+                            <button class="btn edit">Edit</button>
+                            <button class="btn remove">Remove</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>On-Site</td>
+                        <td>08198765432</td>
+                        <td>
+                            <button class="btn edit">Edit</button>
+                            <button class="btn remove">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Add Responder Section -->
+        <section id="add-responder">
+            <h2>Add New Responder</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter responder's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" required>
+                        <option value="Available">Available</option>
+                        <option value="On-Site">On-Site</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn add">Add Responder</button>
+            </form>
+        </section>
+    </main>
+</div>

@@ -5,6 +5,8 @@ from api.v1.routes.auth import auth_router
 from api.v1.routes.user import user_router
 from api.v1.routes.emergency import emergency_router
 from api.v1.routes.location import location_router
+from api.v1.routes.agency import agency_router
+from api.v1.routes.responder import responder_router
 
 
 v1_router = APIRouter()
@@ -14,3 +16,5 @@ v1_router.include_router(auth_router)
 v1_router.include_router(user_router)
 v1_router.include_router(emergency_router)
 v1_router.include_router(location_router)
+v1_router.include_router(agency_router)
+v1_router.include_router(responder_router)

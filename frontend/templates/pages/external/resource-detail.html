@@ -1,0 +1,39 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/resources.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="resource-detail">
+    <header>
+        <h1>{{resource.title}}</h1>
+        <p class="event-type"><span class="emoji">{{ emojis[resource.event_type | capitalize] }}</span> {{ resource.event_type | capitalize }}</p>
+    </header>
+    <div class="details">
+        <div class="info">
+            <div class="row">
+                <h2>Summary</h2>
+                <p>{{ resource.summary }}</p>
+            </div>
+            <div class="row">
+                <h2>Content</h2>
+                <p>{{ resource.content }}</p>
+            </div>
+        </div>
+        <div class="tips"> 
+            <div class="row">
+                <h2>Tips</h2>
+                <ul>
+                    {% for tip in resource.tips %}
+                    <li>💡 {{ tip }}</li>
+                    {% endfor %}
+                </ul>
+                <p>{{ resource.status }}</p>
+            </div>          
+        </div>
+    </div>
+    
+</section>
+
+{% endblock %}

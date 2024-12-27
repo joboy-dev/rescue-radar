@@ -1,9 +1,13 @@
 import enum
 import sqlalchemy as sa
 import geoalchemy2 as gal
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
+from sqlalchemy import event
+
 
 from api.core.base.base_model import BaseTableModel
+from api.v1.models.notification import Notification
+from api.v1.models.responder_emergency import ResponderEmergency
 
 
 class EventType(enum.Enum):
@@ -24,6 +28,14 @@ class SeverityLevel(enum.Enum):
     HIGH = 3
     CRITICAL = 4
     SEVERE = 5
+    
+EVENT_TYPE_EMOJIS = {
+    EventType.NATURAL.value: "🌪️",  # Tornado or natural disaster
+    EventType.FIRE.value: "🔥",     # Fire
+    EventType.MEDICAL.value: "🚑",  # Medical emergency
+    EventType.CRIME.value: "🚔",    # Crime or law enforcement
+    EventType.ACCIDENT.value: "🚗💥",  # Vehicle accident
+}
 
 
 class Emergency(BaseTableModel):
@@ -37,6 +49,7 @@ class Emergency(BaseTableModel):
     status = sa.Column(sa.String, server_default=EventStatus.PENDING.value)
     severity = sa.Column(sa.String, default=SeverityLevel.LOW.value) 
     attachments = sa.Column(sa.String, nullable=True)
+    location_str = sa.Column(sa.String, nullable=True)
     
     reported_by_id = sa.Column(sa.String, sa.ForeignKey('users.id'))
     
@@ -45,3 +58,24 @@ class Emergency(BaseTableModel):
     responder_emergencies = relationship('ResponderEmergency', back_populates='emergency')
     resources_used = relationship('ResourceAllocation', back_populates='emergency')
     final_report = relationship('FinalReport', back_populates='emergency', uselist=False)
+
+
+def after_insert_op(mapper, connection, target):
+    try:
+        session = Session(bind=connection)
+        
+        # Create notification
+        notification = Notification(
+            target_user_id=target.reported_by_id,
+            message=f'New emergency reported at {target.created_at}',
+            emergency_id=target.id
+        )
+        session.add(notification)
+        session.commit()
+        session.refresh(notification)
+        
+    except Exception as e:
+        print(f'An exception occured: {str(e)}')
+
+        
+event.listen(Emergency, 'after_insert', after_insert_op)

@@ -13,11 +13,11 @@ from api.v1.models.location import EmergencyLocation
 
 def inject_context(request: Request):
     return {
-        'request': request,
+        "request": request,
         "app_name": "Rescue Radar",
         "app_version": "1.0.0",
         "footer_message": "Emergency Response System",
-        'year': dt.datetime.now().year
+        "year": dt.datetime.now().year
     }
   
   

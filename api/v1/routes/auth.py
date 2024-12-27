@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, Form
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from geoalchemy2.shape import from_shape
+from shapely.geometry import Point
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.db.database import get_db
+from api.utils.location import get_ip_info
+from api.v1.models.agency import Agency
 from api.v1.models.profile import Profile
+from api.v1.models.responder import Responder
 from api.v1.models.user import User
 from api.v1.services.auth import AuthService
 
@@ -63,13 +68,20 @@ async def login(request: Request, db: Session = Depends(get_db)):
             access_token = AuthService.create_access_token(db=db,user_id=user.id)
             refresh_token = AuthService.create_refresh_token(db=db, user_id=user.id)
             
-            response = RedirectResponse(url="/dashboard", status_code=303)
-            response.set_cookie(key="access_token", value=access_token, httponly=True)
-            response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
-            
             if not user.role:
                 flash(request, 'Select a role', MessageCategory.INFO)
                 return RedirectResponse(url="/select-role", status_code=303)
+            
+            else:
+                if user.role == 'Agency admin':
+                    response =  RedirectResponse(url=f"/agency/dashboard", status_code=303)
+                else:
+                    response = RedirectResponse(url="/dashboard", status_code=303)
+                    
+            response.set_cookie(key="access_token", value=access_token, httponly=True)
+            response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
+            
+            flash(request, 'Logged in successfully', MessageCategory.SUCCESS)
             
             return response
             
@@ -215,9 +227,26 @@ async def select_role(request: Request, db: Session = Depends(get_db)):
         
         role = form_data.get('role')
         
-        User.update(db, request.state.current_user.id, role=role)
-
-        # Redirect after successful signup
+        user = User.update(db, request.state.current_user.id, role=role)
+        
+        # Create profiles based in roles
+        if user.role == 'Responder':
+            # Get ip info
+            location = get_ip_info(request)
+            Responder.create(
+                db=db,
+                user_id=user.id,
+                latitude=location['latitude'],
+                longitude=location['longitude'],
+                location=from_shape(Point(location['latitude'], location['longitude']))
+            )
+        elif user.role == 'Agency admin':
+            Agency.create(
+                db=db,
+                creator_id=user.id
+            )
+        
+        flash(request, f'Role set to {user.role}', MessageCategory.SUCCESS)        
         return RedirectResponse(url="/dashboard", status_code=303)
     
     return context

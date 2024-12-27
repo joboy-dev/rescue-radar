@@ -1,0 +1,38 @@
+{% extends 'pages/user/agency/agency-base.html' %}
+
+{% block dashboard_content %}
+<div class="dashboard responders">
+    <h2>All Responders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if responders %}
+                {% for responder in responders %}
+                <tr>
+                    <td>John Doe</td>
+                    <td>johndoe@gmail.com</td>
+                    <td>Available</td>
+                    <td>08012345678</td>
+                    <td>
+                        <button class="btn edit">Edit</button>
+                        <button class="btn remove">Remove</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="text-align: center;" colspan="5">No responders found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,6 +1,12 @@
 {% extends 'components/base-form.html' %}
 
 {% block extra_fields %}
+<div class="form-group">
+    <label for="location">Location (City, State) <span>*</span></label>
+    <input type="text" id="location" name="location" required autocomplete="off">
+    <div id="suggestion-box" class="suggestion-box"></div>
+</div>
+
 <p class="clear hide">Clear selection</p>
 <div class="file-upload-container">
     <img src="https://cdn-icons-png.freepik.com/256/16381/16381783.png?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="icon" class="icon">
@@ -13,10 +19,30 @@
     <div id="preview" class="preview"></div>
 </div>
 
+<style>
+    .suggestion-box {
+        border: 1px solid #ccc;
+        background: #fff;
+        max-height: 150px;
+        overflow-y: auto;
+        width: 100%;
+        display: none;
+        z-index: 1000;
+    }
+    .suggestion-item {
+        padding: 8px;
+        cursor: pointer;
+        font-size: 0.6rem;
+    }
+    .suggestion-item:hover {
+        background: #f0f0f0;
+    }
+</style>
+
+<!-- FILE UPLOAD -->
 <script>
     let multiFileUploadButton = document.querySelector('#multi-file-upload');
     let clearButtton = document.querySelector('p.clear')
-
 
     multiFileUploadButton.addEventListener('change', (e) => {
         const files = e.target.files
@@ -46,6 +72,72 @@
         const previewContainer = document.getElementById('preview');
         previewContainer.innerHTML = '';
         clearButtton.classList.add('hide')
+    });
+</script>
+
+
+<!--  SUGGESTION BOX -->
+<script>
+    const locationInput = document.getElementById('location');
+    const suggestionBox = document.getElementById('suggestion-box');
+
+    const baseUrl = "{{ request.base_url }}"
+
+    locationInput.addEventListener('input', async () => {
+        const query = locationInput.value.trim();
+
+        if (query.length < 2) { // Trigger only after 2 characters
+            suggestionBox.style.display = 'none';
+            return;
+        }
+
+        let queryList = query.split(',');
+        let city = '';
+        let state = '';
+        if (queryList.length > 1) {
+            city = queryList[-2]
+            state = queryList[-1]
+        } else {
+            city = query;
+            state = '';
+        }
+
+        try {
+            // Fetch location data from the API
+            const response = await fetch(`${baseUrl}locations/search?city=${city}&state=${state}`);
+            if (!response.ok) throw new Error('Failed to fetch location data.');
+
+            const suggestions = await response.json();
+
+            // Populate the suggestion box
+            if (suggestions.length > 0) {
+                suggestionBox.innerHTML = suggestions.map(suggestion => `
+                    <div class="suggestion-item" data-value="${suggestion.city}, ${suggestion.state}">
+                        ${suggestion.city}, ${suggestion.state}
+                    </div>
+                `).join('');
+                suggestionBox.style.display = 'block';
+            } else {
+                suggestionBox.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    });
+
+    // Handle suggestion selection
+    suggestionBox.addEventListener('click', (e) => {
+        if (e.target.classList.contains('suggestion-item')) {
+            locationInput.value = e.target.getAttribute('data-value');
+            suggestionBox.style.display = 'none';
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!suggestionBox.contains(e.target) && e.target !== locationInput) {
+            suggestionBox.style.display = 'none';
+        }
     });
 </script>
 {% endblock %}

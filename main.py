@@ -1,3 +1,4 @@
+import sys
 import time
 from fastapi.exceptions import RequestValidationError
 import uvicorn
@@ -72,7 +73,9 @@ app.include_router(v1_router)
 async def http_exception(request: Request, exc: HTTPException):
     """HTTP exception handler"""
 
+    exc_type, exc_obj, exc_tb = sys.exc_info()
     app_logger.info(f"HTTPException: {request.url.path} | {exc.status_code} | {exc.detail}")
+    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 @app.exception_handler(RequestValidationError)
@@ -91,14 +94,20 @@ async def validation_exception(request: Request, exc: RequestValidationError):
 async def integrity_exception(request: Request, exc: IntegrityError):
     """Integrity error exception handlers"""
 
-    app_logger.info(f"Exception occured: {request.url.path} | 500 | {exc}")
+    # app_logger.info(f"Exception occured: {request.url.path} | 500 | {exc}")
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    app_logger.info(f"Exception occured | {request.url.path} | 500")
+    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 @app.exception_handler(Exception)
 async def exception(request: Request, exc: Exception):
     """Other exception handlers"""
 
-    app_logger.info(f"Exception occured | {request.url.path} | 500 | {exc}")
+    # app_logger.info(f"Exception occured | {request.url.path} | 500 | {exc}")
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    app_logger.info(f"Exception occured | {request.url.path} | 500")
+    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 # Run app

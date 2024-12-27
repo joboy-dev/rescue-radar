@@ -1,0 +1,33 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/resources.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="resources">
+    <header>
+        <h1>Resources</h1>
+    </header>
+
+    <!-- <div class="container"> -->
+    <div class="resource-list">
+        {% if resources %}
+            {% for resource in resources %}
+            <div class="resource-card">
+                <div class="content">
+                    <h1>{{ emojis[resource.event_type | capitalize] }}</h1>
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.summary }}</p>
+                    <span class="status {{ resource.status | lower | replace(' ', '-') }}">{{ resource.status }}</span><br>
+                    <a href="{{ url_for('get_single_resource', url_slug=resource.url_slug) }}" class="btn action">View details</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No resources found</p>
+        {% endif %}
+    </div>
+    <!-- </div> -->
+</section>
+{% endblock %}

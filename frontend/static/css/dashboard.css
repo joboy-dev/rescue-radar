@@ -142,6 +142,11 @@ form input[type="submit"]:hover {
     color: var(--warning-color);
 }
 
+.status.pending {
+    color: var(--error-color);
+}
+
+
 /* RESPONDER ROLE */
 .assignment-name {
     font-size: 1rem;
@@ -179,77 +184,15 @@ li {
     font-size: 0.7rem;
 }
 
-
-/* AGENCY ADMIN ROLE */
-.kpi-section, .active-emergencies-section, .resources-section, .analytics-section {
-    margin: 20px 0;
-}
-
-.kpi-cards {
-    display: flex;
-    align-items: start;
-    justify-content: start;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: 100%;
-    height: fit-content;
-}
-
-.kpi-card {
-    padding: 15px;
-    border-radius: 10px;
-    border: 2px solid var(--tertiary-color);
-    text-align: center;
-    width: 20%;
-    height: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-div.resource .kpi-card:hover {
-    box-shadow: var(--box-shadow);
-}
-
-.emergencies-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.emergencies-table th, .emergencies-table td {
-    border: 1px solid var(--tertiary-color);
-    padding: 8px;
-    text-align: center;
-    font-size: 0.7rem;
+li a {
     color: var(--black-color);
+    text-decoration: none;
 }
 
-.charts {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
+li a:hover {
+    color: var(--tertiary-color);
 }
 
-.chart {
-    border: 2px solid var(--tertiary-color);
-    padding: 20px;
-    border-radius: 10px;
-    width: 45%;
-}
-
-.chart h3 {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.chart canvas {
-    border-radius: 20px;
-    width: 100%;
-    height: 300px;
-}
 
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */
@@ -272,19 +215,6 @@ div.resource .kpi-card:hover {
     .right-sidebar {
         width: 70%;
     }
-
-    .chart {
-        width: 70%;
-    }
-
-    .kpi-cards {
-        align-items: center;
-        justify-content: center;
-    }
-
-    .kpi-card {
-        width: 40%;
-    } 
 }
 
 
@@ -309,17 +239,4 @@ div.resource .kpi-card:hover {
     .right-sidebar {
         width: 100%;
     }
-
-    .chart {
-        width: 100%;
-    }
-
-    .kpi-cards {
-        align-items: center;
-        justify-content: center;
-    }
-
-    .kpi-card {
-        width: 40%;
-    } 
 }

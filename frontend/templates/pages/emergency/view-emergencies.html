@@ -1,0 +1,32 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/emergency.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="emergencies">
+    <header>Emergency List</header>
+
+    <!-- <div class="container"> -->
+    <div class="emergency-list">
+        {% if emergencies %}
+            {% for emergency in emergencies %}
+            <div class="emergency-card">
+                <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
+                <div class="content">
+                    <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }}</h3>
+                    <p><strong>Location:</strong> {{ emergency.location_str }}</p>
+                    <p><strong>Reported:</strong> {{ emergency.created_at.strftime('%b %d, %Y') }}</p>
+                    <span class="status {{ emergency.status | lower | replace(' ', '-') }}">{{ emergency.status }}</span><br>
+                    <a href="{{ url_for('get_single_emergency', emergency_id=emergency.id) }}" class="btn action">View details</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No emergencies found</p>
+        {% endif %}
+    </div>
+    <!-- </div> -->
+</section>
+{% endblock %}

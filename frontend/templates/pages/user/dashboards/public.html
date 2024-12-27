@@ -9,7 +9,7 @@
     <div class="main-content">
         <!-- Safety Tips and Resources Section -->
         <div class="safety-tips">
-            <h2>Safety Tips & Resources</h2>
+            <h2>Safety Resources</h2>
             <ul class="tips-list">
                 <li>💡 Fire Safety Tips: What to Do in a Fire</li>
                 <li>💡 First Aid Basics: How to Respond to Injuries</li>
@@ -23,20 +23,22 @@
         <!-- Emergency Alerts Section -->
         <div class="alerts-section">
             <h2>Nearby Incidents</h2>
-            <div class="alerts">
-                <div class="alert">
-                    <h3>Accident Reported</h3>
-                    <p>Location: Main St & 3rd Ave</p>
-                    <p>Status: <span class="status in-progress">In Progress</span></p>
+            {% if nearby_incidents %}
+                <div class="alerts">
+                    {% for emergency in nearby_incidents[:2] %}
+                    <div class="alert">
+                        <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }} Incident</h3>
+                        <p>📍 Location: {{ emergency.location_str }}</p>
+                        <p>   Status: <span class="status {{ emergency.status | lower | replace(' ', '-') }}">{{ emergency.status }}</span></p>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="alert">
-                    <h3>Medical Emergency</h3>
-                    <p>Location: City Park</p>
-                    <p>Status: <span class="status resolved">Resolved</span></p>
-                </div>
-                <!-- Add more alerts here -->
-            </div>
-            <a href="#" class="dashboard-btn">View more</a>
+                {% if emergencies | length > 3 %}
+                <a href="#" class="dashboard-btn">View more</a>
+                {% endif %}
+            {% else %}
+                <p>No nearby incidents at the moment</p>
+            {% endif %}
         </div>
     
         <!-- Map View of Local Resources -->
@@ -45,7 +47,6 @@
             <div class="map-placeholder">
                 <!-- Embed map or image here -->
                 {% include 'components/map.html' %}
-                <!-- <p>[Map showing nearby resources like hospitals, police, etc.]</p> -->
             </div>
         </div>
     </div>
@@ -55,12 +56,18 @@
         <!-- User Report History -->
         <div class="report-history">
             <h2>Your Report History</h2>
-            <ul>
-                <li>🚨 Fire Incident on Oct 21 - <span class="status resolved">Resolved</span></li>
-                <li>🚑 Medical Assistance on Oct 19 - <span class="status in-progress">In Progress</span></li>
-                <!-- Add more history here -->
-            </ul>
-            <a href="#" class="dashboard-btn">View more</a>
+            {% if emergencies %}
+                <ul>
+                    {% for emergency in emergencies[:3] %}
+                    <li>{{ emojis[emergency.event_type] }} <a href="{{ url_for('get_single_emergency', emergency_id=emergency.id) }}">Reported {{ emergency.event_type }} Incident on {{ emergency.created_at.strftime('%b %d, %Y') }} - <span class="status {{ emergency.status | lower | replace(' ', '-') }}">{{ emergency.status }}</span></a></li>
+                    {% endfor %}
+                </ul>
+                {% if emergencies | length > 3 %}
+                <a href="#" class="dashboard-btn">View more</a>
+                {% endif %}
+            {% else %}
+                <p>No report history available</p>
+            {% endif %}
         </div>
     
         <!-- Emergency Contacts -->

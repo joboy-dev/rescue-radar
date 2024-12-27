@@ -9,6 +9,7 @@ from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.db.database import get_db
 from api.utils.firebase_service import FirebaseService
+from api.v1.models.emergency import Emergency, EVENT_TYPE_EMOJIS
 from api.v1.models.location import EmergencyLocation
 from api.v1.models.profile import Profile
 from api.v1.models.user import User
@@ -22,12 +23,21 @@ user_router = APIRouter()
 @add_template_context('pages/user/dashboards/dashboard.html')
 async def dashboard(request: Request, db: Session=Depends(get_db)):
     
+    current_user = request.state.current_user
+    
     emergency_locations = EmergencyService.get_emergency_locations(db)
+    nearby_incidents = EmergencyService.get_nearby_incidents(db, request)
+    if current_user.role == 'Public':
+        emergencies = Emergency.fetch_by_field(db=db, reported_by_id=current_user.id)
+    else:
+        emergencies = Emergency.all(db)
         
     return {
-        'user': request.state.current_user,
-        'emergency_locations': json.dumps(emergency_locations)
-        # 'emergency_locations': emergency_locations
+        'user': current_user,
+        'emergency_locations': json.dumps(emergency_locations),
+        'nearby_incidents': nearby_incidents,
+        'emergencies': emergencies,
+        'emojis': EVENT_TYPE_EMOJIS
     }
 
 

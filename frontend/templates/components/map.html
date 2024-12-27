@@ -8,7 +8,7 @@
         let current_coordinates = jsonResponse.loc.split(',').map(coord => parseFloat(coord));
 
         // Initialize the map
-        let map = L.map('map').setView(current_coordinates, 8);
+        let map = L.map('map').setView(current_coordinates, 16);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -16,18 +16,29 @@
 
         // Add a marker to the map
         L.marker(current_coordinates).addTo(map)
-            .bindPopup(`${jsonResponse.city}, ${jsonResponse.region}.`)
+            .bindPopup('Current location')
+            //.bindPopup(`Current location: ${jsonResponse.city}, ${jsonResponse.region}.`)
             .openPopup();
 
         // Deserialize the JSON data into a JavaScript variable
-        // const emergencyLocations = JSON.parse(`{{ emergency_locations | safe }}`);
+        const emergencyLocations = JSON.parse(`{{ emergency_locations | safe }}`);
 
-        // Use the data in your JavaScript code
-        // emergencyLocations.forEach(location => {
-           // L.marker(location.geo_location).addTo(map)
-           // .bindPopup(`${location.name}`)
-            // .openPopup();
-        //});
+        map.on('moveend', () => {
+            const bounds = map.getBounds(); // Get the current map bounds
+            const visibleLocations = emergencyLocations.filter(location => {
+                const [lat, lng] = location.geo_location;
+                return bounds.contains(L.latLng(lat, lng));
+            });
+        
+            // Clear existing markers
+            // markerLayer.clearLayers();
+        
+            // Add markers for visible locations
+            visibleLocations.forEach(location => {
+                L.marker(location.geo_location).addTo(markerLayer)
+                    .bindPopup(`${location.name}`);
+            });
+        });
 
         // Add a click listener for the map
         var popup = L.popup();

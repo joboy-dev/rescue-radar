@@ -1,8 +1,10 @@
+import json
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
+from api.v1.models.emergency import EVENT_TYPE_EMOJIS
 from api.v1.services.auth import AuthService
 
 
@@ -99,3 +101,62 @@ async def about(request: Request):
 @add_template_context('pages/external/contact.html')
 async def contact(request: Request):
     return {}
+
+
+@external_router.get('/resources')
+@add_template_context('pages/external/resources.html')
+async def resources(request: Request):
+    '''Endpoint to load all resources'''
+    
+    current_user = request.state.current_user
+    
+    with open('api/core/dependencies/articles.json', 'r') as f:
+        resources = json.load(f)
+        
+    return {
+        'resources': resources,
+        'emojis': EVENT_TYPE_EMOJIS,
+        'user': current_user
+    }
+    
+
+@external_router.get('/resources/{url_slug}')
+@add_template_context('pages/external/resource-detail.html')
+async def get_single_resource(request: Request, url_slug: str):
+    '''Endpoint to load all resources'''
+    
+    current_user = request.state.current_user
+    
+    with open('api/core/dependencies/articles.json', 'r') as f:
+        resources = json.load(f)
+    
+    res = None
+    for resource in resources:
+        if resource['url_slug'] == url_slug:
+            res = resource
+            break
+        
+    return {
+        'resource': res,
+        'emojis': EVENT_TYPE_EMOJIS,
+        'user': current_user
+    }
+    
+
+@external_router.get('/resources')
+@add_template_context('pages/external/resources.html')
+async def search_resources(request: Request, title: str):
+    '''Endpoint to load all resources'''
+    
+    current_user = request.state.current_user
+    
+    with open('api/core/dependencies/articles.json', 'r') as f:
+        resources = json.load(f)
+    
+    results = [res for res in resources if title.lower() in res['title'].lower()]
+    
+    return {
+        'resources': results,
+        'emojis': EVENT_TYPE_EMOJIS,
+        'user': current_user
+    }

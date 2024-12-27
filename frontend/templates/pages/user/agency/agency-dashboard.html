@@ -1,3 +1,11 @@
+{% extends 'pages/user/agency/agency-base.html' %}
+
+{% block dashboard_content %}
+<header>
+    <h1>Welcome, Agency Admin</h1>
+    <p>Manage your responders and emergency operations effectively.</p>
+</header>
+
 <div class="dashboard admin-dashboard">
     <div class="kpi-section">
         <h2>Dashboard Summary</h2>
@@ -36,9 +44,9 @@
                         <form action="" class="reassign-form hide">
                             <label for="assignment-reassign">
                                 <select name="responder" id="assignment-reassign">
-                                    <option value="available">Available</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
+                                    {% for responder in responders %}
+                                    <option value="{{ responder.id }}">{{ responder.id }}</option>
+                                    {% endfor %}
                                 </select>
                             </label>
                             <input type="submit" value="Reassign">
@@ -76,7 +84,6 @@
         <div class="charts">
             <div class="chart">
                 <h3>Response Time Breakdown</h3>
-                <!-- Placeholder for chart, e.g., Chart.js integration -->
                 <canvas id="response-time-chart"></canvas>
             </div>
             <div class="chart">
@@ -104,3 +111,4 @@
         }
     });
 </script>
+{% endblock %}

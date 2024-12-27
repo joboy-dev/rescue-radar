@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 from uuid import uuid4
@@ -16,7 +16,7 @@ class BaseTableModel(Base):
     created_at = sa.Column(sa.DateTime(timezone=True), server_default=sa.func.now())
     updated_at = sa.Column(sa.DateTime(timezone=True), server_default=sa.func.now(), onupdate=sa.func.now())
 
-    def to_dict(self):
+    def to_dict(self, excludes: List[str] = []) -> Dict[str, Any]:
         """Returns a dictionary representation of the instance"""
         
         obj_dict = self.__dict__.copy()
@@ -26,18 +26,24 @@ class BaseTableModel(Base):
             obj_dict["created_at"] = self.created_at.isoformat()
         if self.updated_at:
             obj_dict["updated_at"] = self.updated_at.isoformat()
+        
+        # Exclude specified fields
+        if excludes:
+            for exclude in excludes:
+                if exclude in list(obj_dict.keys()):
+                    del obj_dict[exclude]
             
-        # Process relationships
-        for relationship_name in self.__mapper__.relationships.keys():
-            # Get the related object
-            related_obj = getattr(self, relationship_name)
+        # # Process relationships
+        # for relationship_name in self.__mapper__.relationships.keys():
+        #     # Get the related object
+        #     related_obj = getattr(self, relationship_name)
 
-            if related_obj is None:
-                obj_dict[relationship_name] = None
-            elif isinstance(related_obj, list):  # One-to-Many or Many-to-Many
-                obj_dict[relationship_name] = [item.to_dict() for item in related_obj]
-            else:  # Many-to-One or One-to-One
-                obj_dict[relationship_name] = related_obj.to_dict()
+        #     if related_obj is None:
+        #         obj_dict[relationship_name] = None
+        #     elif isinstance(related_obj, list):  # One-to-Many or Many-to-Many
+        #         obj_dict[relationship_name] = [item.to_dict() for item in related_obj]
+        #     else:  # Many-to-One or One-to-One
+        #         obj_dict[relationship_name] = related_obj.to_dict()
 
         return obj_dict
 
@@ -61,7 +67,8 @@ class BaseTableModel(Base):
         per_page: int = 10, 
         sort_by: str = "created_at", 
         order: str = "desc",
-        show_deleted: bool = False
+        show_deleted: bool = False,
+        get_all: bool = True
     ):
         """Fetches all instances with pagination and sorting"""
         
@@ -76,7 +83,7 @@ class BaseTableModel(Base):
 
         # Handle pagination
         offset = (page - 1) * per_page
-        return query.offset(offset).limit(per_page).all()
+        return query.offset(offset).limit(per_page).all() if not get_all else query.all()
 
     @classmethod
     def fetch_by_id(self, db: Session, id: str):
@@ -94,12 +101,26 @@ class BaseTableModel(Base):
         return db.query(self).filter_by(**kwargs).first()
     
     @classmethod
-    def fetch_by_field(self, db: Session, **kwargs):
+    def fetch_by_field(
+        self, 
+        db: Session, 
+        order: str='desc', 
+        sort_by: str = "created_at", 
+        **kwargs
+    ):
         """Fetches all records that match the given field(s)"""
         
         # db = next(get_db())
         kwargs["is_deleted"] = False
-        return db.query(self).filter_by(**kwargs).all()
+        
+        query = db.query(self)
+        #  Sorting
+        if order == "desc":
+            query = query.order_by(sa.desc(getattr(self, sort_by)))
+        else:
+            query = query.order_by(getattr(self, sort_by))
+            
+        return query.filter_by(**kwargs).all()
 
     @classmethod
     def update(self, db: Session, id: str, **kwargs):

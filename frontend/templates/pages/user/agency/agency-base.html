@@ -1,0 +1,18 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/agency.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="dashboard">
+    <div id="agency-dashboard">
+        {% include 'components/agency-sidebar.html' %}
+    
+        <main class="content">
+            {% block dashboard_content %} {% endblock %}
+        </main>
+    </div>
+</section>
+{% endblock %}

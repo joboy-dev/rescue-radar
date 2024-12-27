@@ -1,0 +1,91 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/emergency.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="emergency-detail">
+    <header>
+        <h1>Emergency Details</h1>
+        <p class="event-type"><span class="emoji">{{ emojis[emergency.event_type] }}</span> {{ emergency.event_type }} Incident</p>
+    </header>
+    <div class="details">
+        <div class="info">
+            <div class="row">
+                <h2>Description</h2>
+                <p>{{ emergency.description }}</p>
+            </div>
+            <div class="row">
+                <h2>Location</h2>
+                <p>📍 {{ emergency.location_str }}</p>
+            </div>
+            <div class="row">
+                <h2>Status</h2>
+                <p class="status {{ emergency.status | lower | replace(' ', '-') }}z">{{ emergency.status }}</p>
+            </div>
+            <div class="row">
+                <h2>Severity Level</h2>
+                <p>{{ emergency.severity }}</p>
+            </div>
+            <div class="row">
+                <h2>Reported By</h2>
+                {% if emergency.reported_by_id %}
+                <p>{{ emergency.reported_by.email }}</p>
+                {% else %}
+                <p>Anonymous</p>
+                {% endif %}
+            </div>
+            <!-- <div class="row">
+                <h2>Attachments</h2>
+                <div class="attachments">
+                    <img src="/static/images/fire.jpg" alt="Fire Image">
+                    <img src="/static/images/damage.jpg" alt="Damage Image">
+                </div>
+            </div> -->
+            <!-- <div class="row">
+                <h2>Responders</h2>
+                <ul>
+                    <li>🚑 Ambulance 1 (Resolved)</li>
+                    <li>🔥 Fire Truck 5 (On-Site)</li>
+                </ul>
+            </div> -->
+        </div>
+        <div class="media">
+            <!-- Map View of Local Resources -->
+            <div class="map-placeholder">
+                <div id="map"></div>
+
+                <script>
+                    fetch("https://ipinfo.io/json?token=45a0b01f8664a2")
+                    .then((response) => response.json())
+                    .then((jsonResponse) => {
+                        // Convert `loc` string to a list of integers
+                        let current_coordinates = jsonResponse.loc.split(',').map(coord => parseFloat(coord));
+                
+                        // Get emergency location coordinates
+                        let emergency_coordinates = ['{{emergency.latitude}}', '{{emergency.longitude}}'].map(coord => parseFloat(coord));
+            
+                        // Initialize the map
+                        let map = L.map('map').setView(emergency_coordinates, 16);
+                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }).addTo(map);
+                        
+                        // Add a marker to the map
+                        L.marker(emergency_coordinates).addTo(map)
+                           .bindPopup('Emergency location')
+                           .openPopup();
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching data:", error);
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    
+</section>
+
+{% endblock %}

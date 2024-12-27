@@ -33,8 +33,13 @@
                 </div>
 
                 <div class="links">
+                    {% if user.role != 'Agency admin' %}
                     <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('report_emergency') }}">Report Emergency</a>
+                    <a href="{{ url_for('get_all_emergencies') }}">View Emergencies</a>
+                    {% endif %}
                     <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('resources') }}">Resources</a>
                     <a href="{{ url_for('logout') }}">Logout</a>
                 </div>
             </div>
@@ -45,6 +50,7 @@
             <a href="{{ url_for('home') }}" class="{% if page == 'index' %} active {% endif %}">Home</a>
             <a href="{{ url_for('about') }}" class="{% if page == 'about' %} active {% endif %}">About</a>
             <a href="{{ url_for('contact') }}" class="{% if page == 'contact' %} active {% endif %}">Contact</a>
+            <a href="{{ url_for('resources') }}" class="{% if page == 'contact' %} active {% endif %}"z>Resources</a>
         </div>
         {% endif %}
         <div class="button">
