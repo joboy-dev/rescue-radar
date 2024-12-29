@@ -30,9 +30,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
             '/profile/edit',
             '/profile/change-password',
             '/profile/upload-picture',
+            '/agency/add-location',
             '/agency/details',
             '/agency/dashboard',
             '/agency/responders',
+            '/notifications',
         ]  # Define more as needed
 
         # Check access token in cookies

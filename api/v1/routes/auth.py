@@ -10,6 +10,7 @@ from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.db.database import get_db
 from api.utils.location import get_ip_info
 from api.v1.models.agency import Agency
+from api.v1.models.location import Location
 from api.v1.models.profile import Profile
 from api.v1.models.responder import Responder
 from api.v1.models.user import User
@@ -67,22 +68,27 @@ async def login(request: Request, db: Session = Depends(get_db)):
             
             access_token = AuthService.create_access_token(db=db,user_id=user.id)
             refresh_token = AuthService.create_refresh_token(db=db, user_id=user.id)
+
+            response = RedirectResponse(url="/dashboard", status_code=303)
             
             if not user.role:
                 flash(request, 'Select a role', MessageCategory.INFO)
-                return RedirectResponse(url="/select-role", status_code=303)
+                response =  RedirectResponse(url="/select-role", status_code=303)
             
-            else:
-                if user.role == 'Agency admin':
-                    response =  RedirectResponse(url=f"/agency/dashboard", status_code=303)
+            if user.role == 'Agency admin':
+                # Get user agency
+                agency = Agency.fetch_one_by_field(db, creator_id=user.id)
+                
+                if not agency.location_str:
+                    flash(request, 'Update your location details', MessageCategory.INFO)
+                    response =  RedirectResponse(url="/agency/add-location", status_code=303)
                 else:
-                    response = RedirectResponse(url="/dashboard", status_code=303)
-                    
+                    response =  RedirectResponse(url=f"/agency/dashboard", status_code=303)
+            
             response.set_cookie(key="access_token", value=access_token, httponly=True)
             response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
             
             flash(request, 'Logged in successfully', MessageCategory.SUCCESS)
-            
             return response
             
         except HTTPException as e:
@@ -229,6 +235,8 @@ async def select_role(request: Request, db: Session = Depends(get_db)):
         
         user = User.update(db, request.state.current_user.id, role=role)
         
+        flash(request, f'Role set to {user.role}', MessageCategory.SUCCESS) 
+               
         # Create profiles based in roles
         if user.role == 'Responder':
             # Get ip info
@@ -245,10 +253,70 @@ async def select_role(request: Request, db: Session = Depends(get_db)):
                 db=db,
                 creator_id=user.id
             )
+            return RedirectResponse(url="/agency/add-location", status_code=303)
         
-        flash(request, f'Role set to {user.role}', MessageCategory.SUCCESS)        
         return RedirectResponse(url="/dashboard", status_code=303)
     
+    return context
+
+
+@auth_router.api_route('/agency/add-location', methods=["GET", "POST"])
+@add_template_context('pages/auth/set-agency-location.html')
+async def set_agency_location(request: Request, db: Session = Depends(get_db)):
+    '''Endpoint for a user to seect thie role in the system'''
+    
+    current_user = request.state.current_user
+    
+    form = build_form(
+        title='Set Agency Location',
+        subtitle=f'Welcome {current_user.email}. Set agency location before proceeding',
+        fields=[],
+        button_text='Save',
+        action='/agency/add-location'
+    )
+    
+    context = {
+        'background_url': 'https://img.freepik.com/premium-photo/portrait-african-male-paramedic-front-ambulance_629685-27281.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid',
+        'form': form,
+        'user': current_user
+    }
+    
+    if request.method == 'POST':
+        # Process the form submission
+        form_data = await request.form()
+        
+        location = form_data.get('location')
+        
+        # Get relevant location data
+        location_data = Location.fetch_one_by_field(
+            db=db,
+            city=location.split(',')[-2].strip(),
+            state=location.split(',')[-1].strip()
+        )
+        
+        # If location data is not found throw an error  so user selects from suggestion
+        if not location_data:
+            flash(
+                request,
+                message='Please select a valid location from the suggestions.',
+                category=MessageCategory.ERROR
+            )
+            return context
+        
+        agency = Agency.fetch_one_by_field(db, creator_id=current_user.id)
+        
+        Agency.update(
+            db, 
+            id=agency.id,
+            latitude=location_data.latitude,
+            longitude=location_data.longitude,
+            location_str=location,
+            location=location_data.geo_location
+        )
+        
+        flash(request, f'Agency location updated', MessageCategory.SUCCESS)
+        return RedirectResponse(url=f"/agency/dashboard", status_code=303)
+        
     return context
 
 

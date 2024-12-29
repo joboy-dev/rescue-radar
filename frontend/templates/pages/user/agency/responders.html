@@ -2,10 +2,7 @@
 
 {% block dashboard_content %}
 <div class="dashboard responders">
-    <header>
-        <h2>Agency Responders</h2>
-        <a href="{{ url_for('get_responders_without_agency') }}" class="btn add">Add Responders</a>
-    </header>
+    <h2>All Responders</h2>
     <table>
         <thead>
             <tr>
@@ -21,14 +18,12 @@
                 {% for responder in responders %}
                 <tr>
                     <td>{{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</td>
-                    <!-- <td><a href="">{{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</a></td> -->
                     <td>{{ responder.user.email }}</td>
                     <td>{{ responder.status | capitalize }}</td>
                     <td>{{ responder.contact_number }}</td>
                     <td>
-                        <!-- <a href="{{ url_for('remove_responder_from_agency', responder_id=responder.id) }}" class="btn remove">Remove</a> -->
-                        <form action="/agency/responders/{{ responder.id }}/remove" method="post">
-                            <input type="submit" value="Remove" class="btn remove">
+                        <form action="/agency/responders/{{ responder.id }}/add" method="post">
+                            <input type="submit" value="Add" class="btn add">
                         </form>
                     </td>
                 </tr>

@@ -18,12 +18,26 @@ responder_router = APIRouter(prefix='/responders')
 
 # Fetch all responders from db
 @responder_router.get('/')
-@add_template_context('pages/user/responder/responders.html')
+@add_template_context('pages/user/agency/responders.html')
 async def get_responders(request: Request, db: Session = Depends(get_db)):
     '''Endpoint to get all responders in db'''
     
     current_user = request.state.current_user
     responders = Responder.all(db)
+    
+    return {
+        'user': current_user,
+        'responders': responders
+    }
+    
+
+@responder_router.get('/agencyless')
+@add_template_context('pages/user/agency/responders.html')
+async def get_responders_without_agency(request: Request, db: Session = Depends(get_db)):
+    '''Endpoint to get all responders in db'''
+    
+    current_user = request.state.current_user
+    responders = db.query(Responder).filter(Responder.agency_id == None).all()
     
     return {
         'user': current_user,
@@ -42,6 +56,7 @@ async def search_responders(
     '''Endpoint to search for all responders in db'''
     
     current_user = request.state.current_user
+    
     responders = (
         db.query(Responder)
         .join(User, User.id == Responder.user_id)
@@ -53,10 +68,7 @@ async def search_responders(
         ).all()
     )
     
-    return {
-        'user': current_user,
-        'responders': responders
-    }
+    return responders
 
 
 # Fetch responder by id

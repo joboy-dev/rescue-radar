@@ -1,0 +1,149 @@
+{% extends 'pages/user/agency/agency-base.html' %}
+
+{% block dashboard_content %}
+<div class="dashboard emergencies">
+    <h2>All Emergencies</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Responder(s)</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Media</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if emergencies %}
+                {% for emergency in emergencies %}
+                <tr>
+                    <td>{{ emergency.event_type }}</td>
+                    <td>{{ emergency.description }}</td>
+                    <td>{{ emergency.location_str }}</td>
+                    <td>
+                        {% if emergency.responder_emergencies %}
+                            {% for res_emergency in emergency.responder_emergencies %}
+                            <p>{{ res_emergency.responder.user.profile.first_name }} {{ res_emergency.responder.user.profile.last_name }}</p>
+                            {% endfor %}
+                        {% else %}
+                        No responders assigned
+                        {% endif %}
+                    </td>
+                    <td>{{ emergency.severity }}</td>
+                    <td>{{ emergency.status | capitalize }}</td>
+                    <td>
+                        {% if emergency.attachments %}
+                            {% for attachment_url in emergency.attachments.split(', ') %}
+                            <a href="{{ attachment_url }}" target="_blank">Attachment{{ loop.index }}</a>
+                            {% endfor %}
+                        {% else %}
+                        No media available
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn edit">Assign</button>
+                        <form action="/agency/emergencies/{{ emergency.id }}/assign" method="post" class="reassign-form hide">
+                            {% if responders %}
+                            <label for="assignment-reassign">
+                                <select name="responder" id="assignment-reassign">
+                                    {% for responder in responders %}
+                                        {% if responder.status == 'available' %}
+                                        <option value="{{ responder.id }}">{{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <input type="submit" value="Assign">
+                            {% else %}
+                            <p>No responders available.</p>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="text-align: center;" colspan="8">No emergencies found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="dashboard emergencies">
+    <h2>Agency Emergencies</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Responder(s)</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Media</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if agency_emergencies %}
+                {% for emergency in agency_emergencies %}
+                <tr>
+                    <td>{{ emergency.event_type }}</td>
+                    <td>{{ emergency.description }}</td>
+                    <td>{{ emergency.location_str }}</td>
+                    <td>
+                        {% if emergency.responder_emergencies %}
+                            {% for res_emergency in emergency.responder_emergencies %}
+                            <p>{{ res_emergency.responder.user.profile.first_name }} {{ res_emergency.responder.user.profile.last_name }}</p>
+                            {% endfor %}
+                        {% else %}
+                        No responders assigned
+                        {% endif %}
+                    </td>
+                    <td>{{ emergency.severity }}</td>
+                    <td>{{ emergency.status | capitalize }}</td>
+                    <td>
+                        {% if emergency.attachments %}
+                            {% for attachment_url in emergency.attachments.split(', ') %}
+                            <a href="{{ attachment_url }}" target="_blank">Attachment{{ loop.index }}</a>
+                            {% endfor %}
+                        {% else %}
+                        No media available
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn edit">Assign</button>
+                        <form action="/agency/emergencies/{{ emergency.id }}/assign" method="post" class="reassign-form hide">
+                            {% if responders %}
+                            <label for="assignment-reassign">
+                                <select name="responder" id="assignment-reassign">
+                                    {% for responder in responders %}
+                                        {% if responder.status == 'available' %}
+                                        <option value="{{ responder.id }}">{{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <input type="submit" value="Assign">
+                            {% else %}
+                            <p>No responders available.</p>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="text-align: center;" colspan="8">No emergencies found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', path='js/reassignForm.js') }}"></script>
+{% endblock %}

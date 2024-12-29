@@ -42,7 +42,7 @@ class LocationService:
         result = db.execute(nearby_cities_query)
         
         nearby_cities = [
-            city.to_dict(excludes=['geo_location'])
+            city.to_dict()
             for city in result.scalars().all()
         ]
         

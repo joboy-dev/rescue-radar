@@ -19,7 +19,12 @@ location_router = APIRouter(prefix='/locations')
 
 @location_router.get('/search', response_model=List[LocationBase])
 # @add_template_context('pages/location/search-locations.html')
-async def search_locations(request: Request, city: str, state: str, db: Session=Depends(get_db)):
+async def search_locations(
+    request: Request, 
+    city: str, 
+    state: str, 
+    db: Session=Depends(get_db)
+):
     '''Endpoint to search for locations'''
     
     locations = Location.search(

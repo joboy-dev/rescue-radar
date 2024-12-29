@@ -10,7 +10,8 @@
         <h1>Resources</h1>
     </header>
 
-    <!-- <div class="container"> -->
+    {% include 'components/search-bar.html' %}
+
     <div class="resource-list">
         {% if resources %}
             {% for resource in resources %}
@@ -19,15 +20,69 @@
                     <h1>{{ emojis[resource.event_type | capitalize] }}</h1>
                     <h3>{{ resource.title }}</h3>
                     <p>{{ resource.summary }}</p>
-                    <span class="status {{ resource.status | lower | replace(' ', '-') }}">{{ resource.status }}</span><br>
                     <a href="{{ url_for('get_single_resource', url_slug=resource.url_slug) }}" class="btn action">View details</a>
                 </div>
             </div>
             {% endfor %}
-        {% else %}
+            {% else %}
             <p>No resources found</p>
-        {% endif %}
+            {% endif %}
     </div>
-    <!-- </div> -->
 </section>
+
+<script>
+    const searchInput = document.getElementById('search');
+    const resultArea = document.querySelector('.search-results');
+    const resourcesElement = document.querySelector('.resource-list');
+
+    const baseUrl = "{{ request.base_url }}"
+
+    searchInput.addEventListener('input', async () => {
+        const query = searchInput.value.trim();
+
+        if (query.length > 0) { // Trigger only after 2 characters
+            resultArea.style.display = 'block';
+            resourcesElement.style.display = 'none';
+            // return;
+        } else {
+            resultArea.style.display = 'none';
+            resourcesElement.style.display = 'grid';
+            resourcesElement.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+            resourcesElement.style.gap = '20px';
+        }
+
+        try {
+            // Fetch location data from the API
+            const response = await fetch(`${baseUrl}resources/search?title=${query}`);
+            if (!response.ok) throw new Error('Failed to fetch data.');
+
+            const results = await response.json();
+
+            // Populate the suggestion box
+            if (results.length > 0) {
+                resultArea.innerHTML = results.map(result => `
+                    <div class="result-item">
+                        <a href="${baseUrl}resources/${result.url_slug}"><h3>${result.title}</h3></a>
+                        <p>${result.summary}</p>
+                     </div>
+                `).join('');
+                resultArea.style.display = 'block';
+            } else {
+                resultArea.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error fetching results:', error);
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!resultArea.contains(e.target) && e.target !== searchInput) {
+            resultArea.style.display = 'none';
+            resourcesElement.style.display = 'grid';
+            resourcesElement.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+            resourcesElement.style.gap = '20px';
+        }
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'components/base.html' %}
+
+{% block head_tags %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/notifications.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="notifications">
+    <header>
+        <h1>Notifications</h1>
+        {% if notifications %}
+        <form action="/notifications/mark-all-as-read" method="post">
+            <input type="submit" id="mark-all-read" class="btn" value="Mark all as read">
+        </form>
+        {% endif %}
+    </header>
+
+    <div class="notification-list">
+        {% if notifications %}
+            {% for notification in notifications %}
+            <div class="notification-item">
+                <div class="content">
+                    <p>{{ emojis[notification.emergency.event_type] }} {{ notification.message }}</p>
+                    <span class="time">{{ notification.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+
+                <form action="/notifications/{{ notification.id }}/mark-as-read" method="post">
+                    <input type="submit" class="mark-read-btn"  value="Mark as read">
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No new notifications.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

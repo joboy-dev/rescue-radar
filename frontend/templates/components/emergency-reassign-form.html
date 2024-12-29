@@ -1,0 +1,16 @@
+<form action="" class="reassign-form hide">
+    {% if responders %}
+    <label for="assignment-reassign">
+        <select name="responder" id="assignment-reassign">
+            {% for responder in responders %}
+                {% if responder.status == 'available' %}
+                <option value="{{ responder.id }}">{{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Assign">
+    {% else %}
+    <p>No responders available.</p>
+    {% endif %}
+</form>

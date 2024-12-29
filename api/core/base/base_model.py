@@ -51,7 +51,6 @@ class BaseTableModel(Base):
     def create(self, db: Session, **kwargs):
         """Creates a new instance of the model"""
         
-        # db = next(get_db())
         
         obj = self(**kwargs)
         db.add(obj)
@@ -72,7 +71,6 @@ class BaseTableModel(Base):
     ):
         """Fetches all instances with pagination and sorting"""
         
-        # db = next(get_db())
         query = db.query(self).filter_by(is_deleted=False) if not show_deleted else db.query(self)
 
         # Handle sorting
@@ -86,17 +84,31 @@ class BaseTableModel(Base):
         return query.offset(offset).limit(per_page).all() if not get_all else query.all()
 
     @classmethod
+    def count(
+        cls, 
+        db: Session, 
+        filters: Dict[str, Any] = {}, 
+        show_deleted: bool = False,
+    ):
+        '''Function to count all records (ignores soft-deleted records)'''
+        
+        query = db.query(cls).filter_by(is_deleted=False if show_deleted else True)
+        
+        for field, value in filters.items():
+            query = query.filter(getattr(cls, field) == value)
+        
+        return query.count()        
+    
+    @classmethod
     def fetch_by_id(self, db: Session, id: str):
         """Fetches a single instance by ID (ignores soft-deleted records)"""
         
-        # db = next(get_db())
         return db.query(self).filter_by(id=id, is_deleted=False).first()
 
     @classmethod
     def fetch_one_by_field(self, db: Session, **kwargs):
         """Fetches one unique record that match the given field(s)"""
         
-        # db = next(get_db())
         kwargs["is_deleted"] = False
         return db.query(self).filter_by(**kwargs).first()
     
@@ -110,7 +122,6 @@ class BaseTableModel(Base):
     ):
         """Fetches all records that match the given field(s)"""
         
-        # db = next(get_db())
         kwargs["is_deleted"] = False
         
         query = db.query(self)
@@ -126,7 +137,6 @@ class BaseTableModel(Base):
     def update(self, db: Session, id: str, **kwargs):
         """Updates an instance with the given ID"""
         
-        # db = next(get_db())
         obj = db.query(self).filter_by(id=id, is_deleted=False).first()
         if not obj:
             return None  # Return None if the object isn't found
@@ -140,7 +150,6 @@ class BaseTableModel(Base):
     def soft_delete(self, db: Session, id: str):
         """Performs a soft delete by setting is_deleted to the current timestamp"""
         
-        # db = next(get_db())
         obj = db.query(self).filter_by(id=id, is_deleted=False).first()
         if obj:
             obj.is_deleted = True
@@ -150,7 +159,6 @@ class BaseTableModel(Base):
     def hard_delete(self, db: Session, id: str):
         """Permanently deletes an instance by ID"""
         
-        # db = next(get_db())
         obj = db.query(self).filter_by(id=id).first()
         if obj:
             db.delete(obj)
@@ -168,7 +176,6 @@ class BaseTableModel(Base):
     ):
         """Custom query with filtering, sorting, and pagination"""
         
-        # db = next(get_db())
         
         query = db.query(self)
         # Apply filters
@@ -205,7 +212,6 @@ class BaseTableModel(Base):
         :return: A list of matching records.
         """
         
-        # db = next(get_db())
 
         # Start building the query
         query = db.query(cls)
@@ -245,7 +251,6 @@ class BaseTableModel(Base):
         :param kwargs: Optional filter parameters
         """
         
-        # db = next(get_db())
 
         # Construct the join condition
         query = db.query(self).join(related_model, join_field)

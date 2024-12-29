@@ -75,7 +75,7 @@ table {
     background: var(--white-color);
     border-radius: 8px;
     overflow: hidden;
-    margin-top: 20px;
+    margin: 20px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -88,39 +88,54 @@ thead th {
     text-align: left;
     padding: 10px;
     font-size: 0.8rem;
+    color: var(--white-color);
 }
 
-tbody td {
+tbody td{
     padding: 10px;
     border-bottom: 1px solid var(--secondary-color);
     font-size: 0.6rem;
+    text-decoration: none;
+    color: var(--black-color);
+}
+
+tbody td a {
+    padding: 10px;
+    font-size: 0.6rem;
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+tbody td a:hover {
+    text-decoration: none;
+    color: var(--secondary-color);
 }
 
 tbody tr:hover {
-    background: #f1f1f1;
+    background: var(--tertiary-color);
 }
 
-a.btn {
+a.btn, button.btn, input.btn {
     padding: 5px 10px;
-    font-size: 0.9rem;
+    font-size: 0.6rem;
     border: none;
     border-radius: 4px;
     text-decoration: none;
 }
 
-a.btn.edit {
-    background: #3498db;
-    color: #fff;
+a.btn.edit, button.btn.edit, input.btn.edit {
+    background: var(--secondary-color);
+    color: var(--white-color);
 }
 
-a.btn.remove {
+a.btn.remove, button.btn.remove, input.btn.remove {
     background: var(--error-color);
-    color: #fff;
+    color: var(--white-color);
 }
 
-a.btn.add {
-    background: #1abc9c;
-    color: #fff;
+a.btn.add, button.btn.add, input.btn.add {
+    background: var(--success-color);
+    color: var(--white-color);
     width: 100%;
 }
 

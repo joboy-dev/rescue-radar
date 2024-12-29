@@ -1,9 +1,11 @@
 import enum
 import sqlalchemy as sa
 import geoalchemy2 as gal
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
+from sqlalchemy import event
 
 from api.core.base.base_model import BaseTableModel
+from api.v1.models.notification import Notification
 
 
 class ResponderStatus(enum.Enum):
@@ -26,4 +28,24 @@ class ResponderEmergency(BaseTableModel):
     emergency = relationship('Emergency', back_populates='responder_emergencies')
     responder = relationship('Responder', back_populates='assigned_emergencies')
     final_report = relationship('FinalReport', back_populates='responders')
-    
+
+
+def after_insert_op(mapper, connection, target):
+    try:
+        session = Session(bind=connection)
+        
+        # Create notification
+        notification = Notification(
+            target_user_id=target.responder.user_id,
+            message=f'A new emenrgency has been assigned to you',
+            emergency_id=target.emergency_id
+        )
+        session.add(notification)
+        session.commit()
+        session.refresh(notification)
+        
+    except Exception as e:
+        print(f'An exception occured: {str(e)}')
+
+        
+event.listen(ResponderEmergency, 'after_insert', after_insert_op)  

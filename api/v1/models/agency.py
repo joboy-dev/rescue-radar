@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
+import geoalchemy2 as gal
 
 from api.core.base.base_model import BaseTableModel
 
@@ -10,6 +11,10 @@ class Agency(BaseTableModel):
     name = sa.Column(sa.String, nullable=False)
     contact_email = sa.Column(sa.String, nullable=False)
     contact_number = sa.Column(sa.String, nullable=False)
+    latitude = sa.Column(sa.Float, nullable=True)
+    longitude = sa.Column(sa.Float, nullable=True)
+    location = sa.Column(gal.Geometry('POINT'), nullable=True)  # Spatial data (latitude, longitude)
+    location_str = sa.Column(sa.String, nullable=True)
     
     creator_id = sa.Column(sa.String, sa.ForeignKey('users.id'), nullable=False)
     
