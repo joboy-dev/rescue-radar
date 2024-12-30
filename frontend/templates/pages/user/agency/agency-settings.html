@@ -1,96 +1,97 @@
-<div class="agency-dashboard">
-    <aside class="sidebar">
-        <h2>Agency Panel</h2>
-        <ul>
-            <li><a href="#dashboard">Dashboard</a></li>
-            <li><a href="#responders">Responders</a></li>
-            <li><a href="#add-responder">Add Responder</a></li>
-            <li><a href="#settings">Settings</a></li>
-            <li><a href="#reports">Reports</a></li>
-            <li><a href="#logout">Logout</a></li>
-        </ul>
-    </aside>
-    <main class="content">
-        <header>
-            <h1>Welcome, Agency Admin</h1>
-            <p>Manage your responders and emergency operations effectively.</p>
-        </header>
+{% extends 'pages/user/agency/agency-base.html' %}
 
-        <!-- Dashboard Section -->
-        <section id="dashboard">
-            <h2>Dashboard Overview</h2>
-            <div class="overview">
-                <div class="card">
-                    <h3>Total Responders</h3>
-                    <p>15</p>
-                </div>
-                <div class="card">
-                    <h3>Ongoing Emergencies</h3>
-                    <p>3</p>
-                </div>
-                <div class="card">
-                    <h3>Resolved Cases</h3>
-                    <p>120</p>
-                </div>
+{% block dashboard_content %}
+<div class="dashboard settings">
+    <header>
+        <h1>Agency Settings</h1>
+        <p>View and update agency details below.</p>
+    </header>
+
+    <div class="form-fields">
+        <form id="agency-details-form" action="/agency/settings/update" method="post">
+            <div class="form-group">
+                <label for="agency-name">Agency Name</label>
+                <input type="text" id="agency-name" name="name" value="{{ agency.name }}">
             </div>
-        </section>
-
-        <!-- Responders Section -->
-        <section id="responders">
-            <h2>All Responders</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Contact</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>Available</td>
-                        <td>08012345678</td>
-                        <td>
-                            <button class="btn edit">Edit</button>
-                            <button class="btn remove">Remove</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>On-Site</td>
-                        <td>08198765432</td>
-                        <td>
-                            <button class="btn edit">Edit</button>
-                            <button class="btn remove">Remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Add Responder Section -->
-        <section id="add-responder">
-            <h2>Add New Responder</h2>
-            <form>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter responder's name" required>
-                </div>
-                <div class="form-group">
-                    <label for="contact">Contact Number</label>
-                    <input type="tel" id="contact" placeholder="Enter phone number" required>
-                </div>
-                <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" required>
-                        <option value="Available">Available</option>
-                        <option value="On-Site">On-Site</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn add">Add Responder</button>
-            </form>
-        </section>
-    </main>
+            <div class="form-group">
+                <label for="contact-email">Contact Email</label>
+                <input type="email" id="contact-email" name="contact-email" value="{{ agency.contact_email }}">
+            </div>
+            <div class="form-group">
+                <label for="contact-number">Contact Number</label>
+                <input type="text" id="contact-number" name="contact-number" value="{{ agency.contact_number }}">
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" value="{{ agency.location_str }}">
+                <div id="suggestion-box" class="suggestion-box"></div>
+            </div>
+            <button type="submit" class="save">Save Changes</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    const locationInput = document.getElementById('location');
+    const suggestionBox = document.getElementById('suggestion-box');
+
+    const baseUrl = "{{ request.base_url }}"
+
+    locationInput.addEventListener('input', async () => {
+        const query = locationInput.value.trim();
+
+        if (query.length < 2) { // Trigger only after 2 characters
+            suggestionBox.style.display = 'none';
+            return;
+        }
+
+        let queryList = query.split(',');
+        let city = '';
+        let state = '';
+        if (queryList.length > 1) {
+            city = queryList[-2]
+            state = queryList[-1]
+        } else {
+            city = query;
+            state = '';
+        }
+
+        try {
+            // Fetch location data from the API
+            const response = await fetch(`${baseUrl}locations/search?city=${city}&state=${state}`);
+            if (!response.ok) throw new Error('Failed to fetch location data.');
+
+            const suggestions = await response.json();
+
+            // Populate the suggestion box
+            if (suggestions.length > 0) {
+                suggestionBox.innerHTML = suggestions.map(suggestion => `
+                    <div class="suggestion-item" data-value="${suggestion.city}, ${suggestion.state}">
+                        ${suggestion.city}, ${suggestion.state}
+                    </div>
+                `).join('');
+                suggestionBox.style.display = 'block';
+            } else {
+                suggestionBox.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+        }
+    });
+
+    // Handle suggestion selection
+    suggestionBox.addEventListener('click', (e) => {
+        if (e.target.classList.contains('suggestion-item')) {
+            locationInput.value = e.target.getAttribute('data-value');
+            suggestionBox.style.display = 'none';
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!suggestionBox.contains(e.target) && e.target !== locationInput) {
+            suggestionBox.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

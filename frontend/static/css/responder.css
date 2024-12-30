@@ -1,4 +1,4 @@
-div#agency-dashboard {
+div#responder-dashboard {
     height: fit-content;
     width: 100%;
     display: flex;
@@ -98,7 +98,7 @@ a.btn.add, button.btn.add, input.btn.add {
     width: 100%;
 }
 
-/* Agency Dashboard */
+/* Responder Dashboard */
 .kpi-section, .active-emergencies-section, .resources-section, .analytics-section {
     margin: 20px 0;
 }
@@ -130,19 +130,6 @@ div.resource .kpi-card:hover {
     box-shadow: var(--box-shadow);
 }
 
-/* .emergencies-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.emergencies-table th, .emergencies-table td {
-    border: 1px solid var(--tertiary-color);
-    padding: 8px;
-    text-align: center;
-    font-size: 0.7rem;
-    color: var(--black-color);
-} */
-
 .charts {
     display: flex;
     align-items: center;
@@ -169,8 +156,8 @@ div.resource .kpi-card:hover {
     height: 300px;
 }
 
-/* Agency settings */
-#agency-details-form {
+/* responder settings */
+#responder-details-form {
     margin-top: 20px;
 }
 
@@ -201,7 +188,7 @@ div.resource .kpi-card:hover {
     border: 1px solid var(--secondary-color);
 }
 
-#agency-details-form button[type="submit"] {
+#responder-details-form button[type="submit"] {
     background-color: var(--primary-color);
     color: var(--white-color);
     border: none;
@@ -211,7 +198,7 @@ div.resource .kpi-card:hover {
     border-radius: 5px;
 }
 
-#agency-details-form button[type="submit"]:hover {
+#responder-details-form button[type="submit"]:hover {
     background-color: var(--tertiary-color);
 }
 

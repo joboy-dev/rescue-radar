@@ -35,6 +35,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             '/agency/dashboard',
             '/agency/responders',
             '/notifications',
+            '/responders/dashboard'
         ]  # Define more as needed
 
         # Check access token in cookies
@@ -80,7 +81,16 @@ class AuthMiddleware(BaseHTTPMiddleware):
         elif request.url.path in unauthenticated_only_routes:
             try:
                 if access_token and AuthService.verify_access_token(db=db, access_token=access_token, credentials_exception=credentials_exception):
-                    return RedirectResponse(url="/dashboard", status_code=303)
+                    token = AuthService.verify_access_token(db=db, access_token=access_token, credentials_exception=credentials_exception)
+                    user = User.fetch_by_id(db=db, id=token.user_id)
+                    
+                    if user.role == 'Public':
+                        return RedirectResponse(url="/dashboard", status_code=303)
+                    elif user.role == 'Agency admin':
+                        return RedirectResponse(url="/agency/dashboard", status_code=303)
+                    elif user.role == 'Responder':
+                        return RedirectResponse(url="/responders/dashboard", status_code=303)
+                    
             except HTTPException as e:
                 flash(request, e.detail, MessageCategory.ERROR)
                 return RedirectResponse(url="/login", status_code=303)

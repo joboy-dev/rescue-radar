@@ -1,0 +1,81 @@
+{% extends 'pages/user/responder/responder-base.html' %}
+
+{% block dashboard_content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Welcome, {{ responder.user.profile.first_name }} {{ responder.user.profile.last_name }}</h1>
+        <p>Your dashboard provides real-time updates and essential information.</p>
+    </header>
+    
+    <!-- Key Metrics -->
+    <div class="kpi-section">
+        <h2>Dashboard Summary</h2>
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <h3>Assigned Cases</h3>
+                <p>{{ assigned_emergencies_count }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Completed Cases</h3>
+                <p>{{ completed_emergencies_all_time }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Total Cases This Month</h3>
+                <p>{{ total_emergencies_this_month }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Total Cases This Year</h3>
+                <p>{{ total_emergencies_this_year }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Completed Cases This Month</h3>
+                <p>{{ completed_emergencies_this_month }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Completed Cases This Year</h3>
+                <p>{{ completed_emergencies_this_year }}</p>
+            </div>
+            <div class="kpi-card">
+                <h3>Success Rate</h3>
+                <p>{{ completed_emergencies_percentage }}%</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Active Emergencies -->
+    <div class="active-emergencies-section">
+        <h2>Assigned Emergencies</h2>
+        <div class="emergency-list">
+            {% for emergency in assigned_emergencies %}
+            <div class="emergency-card">
+                <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
+                <div class="content">
+                    <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }}</h3>
+                    <p><strong>Location:</strong> {{ emergency.location_str }}</p>
+                    <p><strong>Reported:</strong> {{ emergency.created_at.strftime('%b %d, %Y') }}</p>
+                    <a href="{{ url_for('get_single_emergency', emergency_id=emergency.id) }}" class="btn action">View details</a>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not assigned_emergencies %}
+            <p>No active emergencies at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Emergency Trends -->
+    <div class="analytics-section">
+        <h2>Performance Metrics</h2>
+        <div class="charts">
+            <div class="chart">
+                <h3>Response Time Breakdown</h3>
+                <canvas id="response-time-chart"></canvas>
+            </div>
+            <div class="chart">
+                <h3>Emergency Trends</h3>
+                <canvas id="emergency-trend-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

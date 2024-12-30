@@ -93,6 +93,82 @@ async def agency_emergencies(
     return data
 
 
+@agency_router.get('/settings')
+@add_template_context('pages/user/agency/agency-settings.html')
+async def agency_settings(
+    request: Request,
+    db: Session=Depends(get_db)
+):
+    '''Endpoint to get agency settings'''
+    
+    # return {'user': request.state.current_user}
+    current_user = request.state.current_user
+    
+    if current_user.role != 'Agency admin':
+        flash(request,'Unauthorized action', MessageCategory.ERROR)
+        return RedirectResponse(url='/dashboard', status_code=303)
+    
+    data = AgencyService.get_agency_full_details(db, current_user)
+    
+    return data
+
+
+@agency_router.post('/settings/update')
+async def update_agency_settings(
+    request: Request,
+    db: Session=Depends(get_db)
+):
+    '''Endpoint to update agency settings'''
+    
+    current_user = request.state.current_user
+    
+    if current_user.role != 'Agency admin':
+        flash(request,'Unauthorized action', MessageCategory.ERROR)
+        return RedirectResponse(url='/dashboard', status_code=303)
+    
+    # Process the form submission
+    form_data = await request.form()
+    
+    # Example validation or processing of form_data
+    agency_name = form_data.get('name')
+    contact_number = form_data.get('contact-number')
+    contact_email = form_data.get('contact-email')
+    location = form_data.get('location')
+    
+    # Get relevant location data
+    location_data = Location.fetch_one_by_field(
+        db=db,
+        city=location.split(',')[-2].strip(),
+        state=location.split(',')[-1].strip()
+    )
+    
+    # If location data is not found throw an error  so user selects from suggestion
+    if not location_data:
+        flash(
+            request,
+            message='Please select a valid location from the suggestions.',
+            category=MessageCategory.ERROR
+        )
+        return RedirectResponse(url=f"/agency/settings", status_code=303)
+    
+    agency = Agency.fetch_one_by_field(db, creator_id=current_user.id)
+    
+    Agency.update(
+        db, 
+        id=agency.id,
+        latitude=location_data.latitude,
+        longitude=location_data.longitude,
+        location_str=location,
+        location=location_data.geo_location,
+        name=agency_name,
+        contact_number=contact_number,
+        contact_email=contact_email,
+    )
+    
+    flash(request, f'Agency details updated', MessageCategory.SUCCESS)
+    return RedirectResponse(url=f"/agency/settings", status_code=303)
+
+
 @agency_router.post('/emergencies/{emergency_id}/assign')
 async def assign_emergency_to_responder(
     request: Request,

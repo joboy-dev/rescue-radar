@@ -293,6 +293,154 @@ footer {
 }
 
 
+/* SUGGESTION BOX */
+.suggestion-box {
+    border: 1px solid #ccc;
+    background: var(--white-color);
+    height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    display: none;
+    z-index: 1000;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 0.6rem;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+.suggestion-item:hover {
+    background: var(--tertiary-color);
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 20%;
+    height: 100vh; /* Full height */
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 20px;
+    position: fixed; /* Fixed position */
+    top: 0;
+    left: 0;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.sidebar h2 {
+    font-size: 1rem;
+    margin-top: 120px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: var(--white-color);
+    text-decoration: none;
+    font-size: 0.7rem;
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    color: var(--tertiary-color);
+}
+
+/* Emergency */
+.emergency-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.emergency-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    border: 2px solid var(--secondary-color);
+    padding: 20px;
+}
+
+.emergency-card:hover {
+    transform: scale(1.03);
+}
+
+.emergency-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.emergency-card .content {
+    padding: 10px;
+}
+
+.emergency-card h3 {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+.emergency-card p {
+    margin: 5px 0;
+    color: var(--black-color);
+    font-size: 0.6rem;
+}
+
+.emergency-card .status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.status.resolved {
+    background-color: var(--success-colot);
+}
+
+.status.in-progress {
+    background-color: var(--warning-color);
+}
+
+.status.pending {
+    background-color: var(--error-color);
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+a.action {
+    background-color: var(--tertiary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 0.6rem;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #0056b3;
+}
+
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */

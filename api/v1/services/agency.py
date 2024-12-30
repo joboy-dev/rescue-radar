@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 
-from api.v1.models.emergency import Emergency
+from api.v1.models.emergency import EVENT_TYPE_EMOJIS, Emergency
 from api.v1.models.agency import Agency
 from api.v1.models.responder import Responder
 from api.v1.models.responder_emergency import ResponderEmergency
@@ -102,6 +102,7 @@ class AgencyService:
             'engaged_responders_count': len(engaged_responders),
             'total_responders_count': len(agency.responders),
             'resources': agency.resources,
+            'emojis': EVENT_TYPE_EMOJIS,
         }
         
         return data

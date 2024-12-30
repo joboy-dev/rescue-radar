@@ -74,7 +74,7 @@ for _ in range(5):
     print(agency)
 
 
-for user in User.all(per_page=5000):
+for user in User.all():
     print(f'Email: {user.email}')
     print(f'Password: {PASSWORD}')
     print('\n\n')

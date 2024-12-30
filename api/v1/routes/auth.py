@@ -83,8 +83,11 @@ async def login(request: Request, db: Session = Depends(get_db)):
                     flash(request, 'Update your location details', MessageCategory.INFO)
                     response =  RedirectResponse(url="/agency/add-location", status_code=303)
                 else:
-                    response =  RedirectResponse(url=f"/agency/dashboard", status_code=303)
+                    response =  RedirectResponse(url="/agency/dashboard", status_code=303)
             
+            elif user.role == 'Responder':
+                response =  RedirectResponse(url="/responders/dashboard", status_code=303)
+                
             response.set_cookie(key="access_token", value=access_token, httponly=True)
             response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
             
@@ -248,6 +251,7 @@ async def select_role(request: Request, db: Session = Depends(get_db)):
                 longitude=location['longitude'],
                 location=from_shape(Point(location['latitude'], location['longitude']))
             )
+            return RedirectResponse(url="/responders/dashboard", status_code=303)
         elif user.role == 'Agency admin':
             Agency.create(
                 db=db,
