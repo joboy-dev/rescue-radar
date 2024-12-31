@@ -125,14 +125,14 @@ async def report_emergency(
             location_str=location,
             longitude=location_data.longitude,
             latitude=location_data.latitude,
-            reported_by_id=current_user.id,
+            reported_by_id=current_user.id if current_user else None,
             attachments=','.join(picture_urls)
         )
         
         # Redirect to the emergency dashboard
         flash(request, 'Emergency reported successfully', MessageCategory.SUCCESS)
     
-        return RedirectResponse('/dashboard', 303)
+        return RedirectResponse('/dashboard', 303) if current_user else RedirectResponse('/', 303)
                 
     return context
 

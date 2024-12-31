@@ -180,6 +180,7 @@ p.clear {
 @media screen and (max-width: 1024px) {
     #form form {
         width: 75%;
+        padding: 20px 40px;
     }
 }
 
@@ -193,6 +194,7 @@ p.clear {
 @media screen and (max-width: 540px) {
     #form form {
         width: 90%;
+        padding: 10px 20px;
     }
 
     input[type=submit] {

@@ -1,17 +1,3 @@
-header {
-    color: var(--primary-color);
-    padding: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
-}
-
 .resource-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -37,20 +23,35 @@ header {
     object-fit: cover;
 }
 
-.resource-card .content {
+.resource-card .card-content {
     padding: 10px;
 }
 
-.resource-card h3 {
+.resource-card h3 a, .resource-card h3 {
     margin: 0 0 10px;
     font-size: 0.8rem;
     color: var(--primary-color);
+    text-decoration: none;
+}
+
+.resource-card h3 a:hover {
+    color: var(--secondary-color);
 }
 
 .resource-card p {
-    margin: 5px 0;
+    margin: 2px 0;
     color: var(--black-color);
     font-size: 0.6rem;
+}
+
+.resource-card a {
+    color: var(--black-color);
+    font-size: 0.6rem;
+    text-decoration: none;
+}
+
+.resource-card a:hover {
+    color: var(--secondary-color);
 }
 
 .resource-card .status {
@@ -147,7 +148,7 @@ header h1 {
     color: var(--black-color);
     list-style-type: none;
     margin-bottom: 5px;
-    text-align: justify;
+    text-align: left;
 }
 
 .map-placeholder {

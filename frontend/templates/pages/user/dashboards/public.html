@@ -10,14 +10,16 @@
         <!-- Safety Tips and Resources Section -->
         <div class="safety-tips">
             <h2>Safety Resources</h2>
+            {% if resources %}
             <ul class="tips-list">
-                <li>💡 Fire Safety Tips: What to Do in a Fire</li>
-                <li>💡 First Aid Basics: How to Respond to Injuries</li>
-                <li>💡 Natural Disasters: How to Stay Safe During Floods</li>
-                <!-- Add more tips here -->
+                {% for resource in resources[:5] %}
+                <li><a href="{{ url_for('get_single_resource', url_slug=resource.url_slug) }}">{{ emojis[resource.event_type | capitalize] }} {{ resource.title }}</a></li>
+                {% endfor %}
             </ul>
-            <a href="#" class="dashboard-btn">View more</a>
-            <!-- <a href="/resources" class="view-all">View All Tips</a> -->
+            <a href="{{ url_for('resources') }}" class="dashboard-btn">View More</a>
+            {% else %}
+            <p>No safety resources available</p>
+            {% endif %}
         </div>
     
         <!-- Emergency Alerts Section -->
@@ -63,7 +65,7 @@
                     {% endfor %}
                 </ul>
                 {% if emergencies | length > 3 %}
-                <a href="#" class="dashboard-btn">View more</a>
+                <a href="{{ url_for('get_all_emergencies') }}" class="dashboard-btn">View more</a>
                 {% endif %}
             {% else %}
                 <p>No report history available</p>
@@ -73,12 +75,19 @@
         <!-- Emergency Contacts -->
         <div class="emergency-contacts">
             <h2>Emergency Contacts</h2>
-            <ul>
-                <li>Police: 112 or 199</li>
-                <li>Fire Department: 112</li>
-                <!-- <li>Local Hospital: +1 (555) 123-4567</li> -->
-                <!-- Add more contacts here -->
-            </ul>
+            {% if emergency_contacts %}
+                {% for emergency_contact in emergency_contacts[:3] %}
+                <h3>{{ emergency_contact.name }}</h3>
+                <ul>
+                    {% for contact_number in emergency_contact.contact_numbers %}
+                    <li><a href="tel:{{ contact_number }}" target="_blank">{{ contact_number }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+                <a href="{{ url_for('emergency_contacts') }}" class="dashboard-btn">View More</a>
+            {% else %}
+                <p>No emergency contacts available</p>
+            {% endif %}
         </div>
     
         <!-- Feedback and Support -->

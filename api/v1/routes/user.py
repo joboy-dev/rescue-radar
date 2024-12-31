@@ -32,12 +32,20 @@ async def dashboard(request: Request, db: Session=Depends(get_db)):
     else:
         emergencies = Emergency.all(db)
         
+    with open('api/core/dependencies/data/articles.json', 'r') as f:
+        resources = json.load(f)
+    
+    with open('api/core/dependencies/data/emergency_contacts.json', 'r') as f:
+        emergency_contacts = json.load(f)
+        
     return {
         'user': current_user,
         'emergency_locations': json.dumps(emergency_locations),
         'nearby_incidents': nearby_incidents,
         'emergencies': emergencies,
-        'emojis': EVENT_TYPE_EMOJIS
+        'emojis': EVENT_TYPE_EMOJIS,
+        'resources': resources,
+        'emergency_contacts': emergency_contacts
     }
 
 

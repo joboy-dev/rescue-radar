@@ -5,7 +5,7 @@ from shapely.geometry import Point
 from api.v1.models.location import Location
 
 
-directory = 'api/core/dependencies/nigerian_cities'
+directory = 'api/core/dependencies/data/nigerian_cities'
 city_files = os.listdir(directory)
 
 for file in city_files:

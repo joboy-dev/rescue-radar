@@ -1,9 +1,26 @@
 <div class="search-container">
     <label for="search">
-        <input type="text" name="search" id="search" placeholder="Search">
+        <input type="text" name="search" id="search" placeholder="Search" required minlength="2">
+        <button class="btn search-btn">Search</button>
     </label>
-    
-    <div class="search-results">
-        <h3>Search Results</h3>
-    </div>
 </div>
+
+<script>
+    const searchInput = document.getElementById('search');
+    const searchButton = document.querySelector('.search-btn');
+
+    const url = "{{ request.url }}"
+
+    searchButton.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        
+        if (query) {
+            // Create the updated URL with the search parameter
+            const searchUrl = new URL(url);
+            searchUrl.searchParams.set('search', query);
+
+            // Navigate to the updated URL
+            window.location.href = searchUrl.toString();
+        }
+    });
+</script>

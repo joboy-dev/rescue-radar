@@ -6,20 +6,27 @@
     justify-content: center;
     height: fit-content;
     width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-container label {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 input#search {
     width: 100%;
     padding: 10px;
-    border: 1px solid var(--black-color);
+    border: 2px solid var(--black-color);
     border-radius: 10px;
     font-size: 0.6rem;
     outline: none;
     background-color: var(--white-color);
 }
 
-input#search {
-    border: 1px solid var(--secondary-color);
+input#search:focus {
+    border: 2px solid var(--secondary-color);
 }
 
 div.search-results {
@@ -50,13 +57,13 @@ div.search-results {
     text-decoration: none;
 }
 
-.result-item a:hover {
-    color: var(--secondary-color);
-}
-
 .result-item a h3 {
     color: var(--primary-color);
     font-size: 0.8rem;
+}
+
+.result-item a h3:hover {
+    color: var(--secondary-color);
 }
 
 .result-item p {
@@ -318,6 +325,22 @@ footer {
     background: var(--tertiary-color);
 }
 
+
+/* Sidebar content */
+div#dashboard-content {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#dashboard-content .content {
+    margin-left: 20%; /* Leave space for the fixed sidebar */
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* Content scrolls */
+}
+
 /* Sidebar */
 
 .sidebar {
@@ -329,12 +352,22 @@ footer {
     position: fixed; /* Fixed position */
     top: 0;
     left: 0;
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    overflow-y: auto; 
+}
+
+img.sidebar-hamburger-icon, img.cancel-icon {
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    position: fixed;
+    top: 110px;
+    left: 5px;
+    z-index: 1200;
 }
 
 .sidebar h2 {
     font-size: 1rem;
-    margin-top: 120px;
+    margin-top: 80px;
     margin-bottom: 20px;
     text-align: center;
     color: var(--secondary-color);
@@ -359,6 +392,27 @@ footer {
     color: var(--tertiary-color);
 }
 
+#dashboard-content .content header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#dashboard-content .content header h1 {
+    font-size: 1.2rem;
+    color: var(--black-color);
+}
+
+#dashboard-content .content header p {
+    color: var(--tertiary-color);
+    margin-top: 5px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
 /* Emergency */
 .emergency-list {
     display: grid;
@@ -372,7 +426,7 @@ footer {
     overflow: hidden;
     transition: transform 0.2s ease;
     border: 2px solid var(--secondary-color);
-    padding: 20px;
+    padding: 10px;
 }
 
 .emergency-card:hover {
@@ -385,7 +439,7 @@ footer {
     object-fit: cover;
 }
 
-.emergency-card .content {
+.emergency-card .card-content {
     padding: 10px;
 }
 
@@ -410,15 +464,15 @@ footer {
     display: inline-block;
 }
 
-.status.resolved {
+.emergency-card .status.resolved {
     background-color: var(--success-colot);
 }
 
-.status.in-progress {
+.emergency-card .status.in-progress {
     background-color: var(--warning-color);
 }
 
-.status.pending {
+.emergency-card .status.pending {
     background-color: var(--error-color);
 }
 
@@ -437,8 +491,48 @@ a.action {
     cursor: pointer;
 }
 
-.actions button:hover {
-    background-color: #0056b3;
+
+/* PAGINATOR */
+div#paginator {
+    margin-top: 20px;
+    height: 200px;
+    overflow: auto;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    display: block;
+    padding: 8px 16px;
+    border: 1px solid var(--secondary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.page-item.disabled .page-link {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border: none;
+    pointer-events: none;
 }
 
 /* ------------------------------------------------------- */
@@ -462,6 +556,18 @@ a.action {
 
     div.search-results {
         margin: var(--padding-tab);
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+    
+    #dashboard-content .content {
+        margin-left: 0;
+    }
+
+    .sidebar h2 {
+        margin-top: 80px;
     }
 }
 

@@ -1,31 +1,3 @@
-div#responder-dashboard {
-    height: fit-content;
-    width: 100%;
-    display: flex;
-}
-
-/* Main Content */
-.content {
-    margin-left: 20%; /* Leave space for the fixed sidebar */
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto; /* Content scrolls */
-}
-
-header {
-    margin-bottom: 30px;
-}
-
-header h1 {
-    font-size: 1.2rem;
-    color: var(--black-color);
-}
-
-header p {
-    color: var(--tertiary-color);
-    margin-top: 5px;
-}
-
 
 /* Table */
 table {

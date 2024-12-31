@@ -121,9 +121,21 @@ form input[type="submit"]:hover {
     padding: 0;
 }
 
-.tips-list li, .alerts .alert, .report-history ul li, .emergency-contacts ul li {
+.emergency-contacts h3 {
+    margin-bottom: 5px;
+    color: var(--secondary-color);
+    font-size: 0.7rem;
+}
+
+.tips-list li a, .alerts .alert, .report-history ul li, .emergency-contacts ul li a {
     margin: 5px 0;
     font-size: 0.7rem;
+    color: var(--black-color);
+    text-decoration: none;
+}
+
+.tips-list li a:hover, .emergency-contacts ul li a:hover  {
+    color: var(--secondary-color);
 }
 
 .map-placeholder {

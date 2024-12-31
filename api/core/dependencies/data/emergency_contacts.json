@@ -1,0 +1,82 @@
+[
+    {
+        "name": "112",
+        "contact_numbers": ["112"],
+        "description": "National toll-free emergency number for police, fire, and ambulance services. Available 24/7 across Nigeria."
+    },
+    {
+        "name": "199",
+        "contact_numbers": ["199"],
+        "description": "Toll-free number connecting to police, fire brigade, and medical responders."
+    },
+    {
+        "name": "Nigeria Police Force - General Lines",
+        "contact_numbers": ["01-4931260", "01-4978899"],
+        "description": "General contact numbers for the Nigeria Police Force."
+    },
+    {
+        "name": "Inspector General of Police (SMS Only)",
+        "contact_numbers": ["0805966666"],
+        "description": "Direct SMS line to the Inspector General of Police."
+    },
+    {
+        "name": "Rapid Response Squad (RRS)",
+        "contact_numbers": ["070-55350249", "070-35068242", "080-79279349"],
+        "description": "Hotlines for the Rapid Response Squad, known for quick intervention in emergencies."
+    },
+    {
+        "name": "State Security Service (SSS)",
+        "contact_numbers": ["08132222105", "08132222106", "08132222107", "08132222108", "08132222109"],
+        "description": "Hotlines for the State Security Service (SSS)."
+    },
+    {
+        "name": "Federal Road Safety Corps (FRSC)",
+        "contact_numbers": ["122", "07002255372"],
+        "description": "Hotlines for traffic-related emergencies and road safety."
+    },
+    {
+        "name": "Emergency Response Africa",
+        "contact_numbers": ["0800 0255 5375"],
+        "description": "Hotline for Emergency Response Africa services."
+    },
+    {
+        "name": "Lagos Emergency Service",
+        "contact_numbers": ["112", "767"],
+        "description": "Hotlines for a broad range of emergency services in Lagos."
+    },
+    {
+        "name": "Lagos State Fire Service",
+        "contact_numbers": ["08033234943", "08023321770"],
+        "description": "Hotlines for fire outbreaks in Lagos."
+    },
+    {
+        "name": "LASEMA",
+        "contact_numbers": ["01-5931947", "4933658", "4931940"],
+        "description": "Hotlines for collapsed buildings and flooding emergencies in Lagos."
+    },
+    {
+        "name": "Rape Helpline",
+        "contact_numbers": ["080072732255"],
+        "description": "Dedicated helpline for rape-related emergencies."
+    },
+    {
+        "name": "Domestic Violence (Lagos)",
+        "contact_numbers": ["08057542266", "08102678443"],
+        "description": "Helplines for domestic violence victims in Lagos."
+    },
+    {
+        "name": "Suicide Prevention Initiative",
+        "contact_numbers": ["08062106493", "08092106493", "09080217555"],
+        "description": "Hotlines for mental health crises and suicide prevention."
+    },
+    {
+        "name": "Lagos Suicide Hotlines",
+        "contact_numbers": ["08058820777", "09030000741"],
+        "description": "Dedicated suicide prevention hotlines in Lagos."
+    },
+    {
+        "name": "Nigerian Army Human Rights",
+        "contact_numbers": ["08160134303", "08161507644"],
+        "description": "Hotlines for reporting harassment by army personnel."
+    }
+]

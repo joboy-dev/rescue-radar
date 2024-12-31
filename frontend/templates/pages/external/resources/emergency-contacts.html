@@ -1,0 +1,32 @@
+{% extends 'pages/external/resources/resources-base.html' %}
+
+{% block resources_content %}
+<header>
+    <h1>Emergency Contacts</h1>
+</header>
+
+<div class="resource-list">
+    {% if pagination_data.data %}
+        {% for emergency_contact in pagination_data.data %}
+        <div class="resource-card">
+            <div class="card-content">
+                <h3>{{ emergency_contact.name }}</h3>
+                <p>{{emergency_contact.description}}</p>
+                <p>
+                    <b>Contact Numbers</b>:
+                    {% for contact_number in emergency_contact.contact_numbers %}
+                    <a href="tel:{{ contact_number }}" target="_blank">{{ contact_number }}</a>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No resources found</p>
+        {% endif %}
+</div>
+
+<!-- Pagination -->
+{% include 'components/paginator.html' %}
+
+{% endblock %}

@@ -49,7 +49,7 @@
             {% for emergency in assigned_emergencies %}
             <div class="emergency-card">
                 <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
-                <div class="content">
+                <div class="card-content">
                     <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }}</h3>
                     <p><strong>Location:</strong> {{ emergency.location_str }}</p>
                     <p><strong>Reported:</strong> {{ emergency.created_at.strftime('%b %d, %Y') }}</p>

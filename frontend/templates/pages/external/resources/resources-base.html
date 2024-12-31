@@ -2,16 +2,16 @@
 
 {% block head_tags %}
 <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', path='css/agency.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='css/resources.css') }}">
 {% endblock %}
 
 {% block content %}
 <section id="dashboard">
     <div id="dashboard-content">
-        {% include 'components/sidebars/agency-sidebar.html' %}
+        {% include 'components/sidebars/resources-sidebar.html' %}
     
         <main class="content">
-            {% block dashboard_content %} {% endblock %}
+            {% block resources_content %} {% endblock %}
         </main>
     </div>
 </section>

@@ -6,7 +6,7 @@ from shapely.geometry import Point
 from api.v1.models.location import EmergencyLocation
 
 
-directory = 'api/core/dependencies/emergency_locations'
+directory = 'api/core/dependencies/data/emergency_locations'
 
 
 def seed_fire_locations():

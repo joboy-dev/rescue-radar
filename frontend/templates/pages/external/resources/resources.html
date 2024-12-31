@@ -1,0 +1,29 @@
+{% extends 'pages/external/resources/resources-base.html' %}
+
+{% block resources_content %}
+<header>
+    <h1>Resources</h1>
+</header>
+
+{% include 'components/search-bar.html' %}
+
+<div class="resource-list">
+    {% if pagination_data.data %}
+        {% for resource in pagination_data.data %}
+        <div class="resource-card">
+            <div class="card-content">
+                <h1>{{ emojis[resource.event_type | capitalize] }}</h1>
+                <h3><a href="{{ url_for('get_single_resource', url_slug=resource.url_slug) }}">{{ resource.title }}</a></h3>
+                <p>{{ resource.summary }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No resources found</p>
+        {% endif %}
+</div>
+
+<!-- Pagination -->
+{% include 'components/paginator.html' %}
+
+{% endblock %}

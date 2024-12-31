@@ -1,0 +1,10 @@
+{% extends 'components/sidebars/sidebar-base.html' %}
+
+{% block sidebar_content %}
+<h2>Resources</h2>
+<ul>
+    <li><a href="{{ url_for('resources') }}">Safety Resources</a></li>
+    <li><a href="{{ url_for('emergency_contacts') }}">Emergency Contacts</a></li>
+    <li> <a href="{{ url_for('emergency_locations') }}">Emergency Locations</a></li>
+</ul>
+{% endblock %}

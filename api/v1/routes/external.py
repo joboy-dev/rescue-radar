@@ -1,12 +1,16 @@
 import json
 import pprint
+from typing import Optional
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.flash_messages import MessageCategory, flash
+from api.db.database import get_db
+from api.utils.paginator import paginate_items
 from api.v1.models.emergency import EVENT_TYPE_EMOJIS
+from api.v1.models.location import EmergencyLocation
 from api.v1.services.auth import AuthService
 
 
@@ -106,17 +110,29 @@ async def contact(request: Request):
 
 
 @external_router.get('/resources')
-@add_template_context('pages/external/resources.html')
-async def resources(request: Request):
+@add_template_context('pages/external/resources/resources.html')
+async def resources(
+    request: Request, 
+    search: Optional[str] = None,
+    page: int = 1,
+    per_page: int = 10,
+):
     '''Endpoint to load all resources'''
     
     current_user = request.state.current_user
     
-    with open('api/core/dependencies/articles.json', 'r') as f:
+    with open('api/core/dependencies/data/articles.json', 'r') as f:
         resources = json.load(f)
-        
+    
+    if search:
+        results = [res for res in resources if search.lower() in res['title'].lower()]
+        resources = results
+    
+    # paginate
+    pagination_data = paginate_items(resources, page, per_page)
+    
     return {
-        'resources': resources,
+        'pagination_data': pagination_data,
         'emojis': EVENT_TYPE_EMOJIS,
         'user': current_user
     }
@@ -129,23 +145,88 @@ async def search_resources(request: Request, title: str):
     
     current_user = request.state.current_user
     
-    with open('api/core/dependencies/articles.json', 'r') as f:
+    with open('api/core/dependencies/data/articles.json', 'r') as f:
         resources = json.load(f)
     
     results = [res for res in resources if title.lower() in res['title'].lower()]
     
-    pprint.pprint(results)
     return results
+
+
+@external_router.get('/resources/emergency-contacts')
+@add_template_context('pages/external/resources/emergency-contacts.html')
+async def emergency_contacts(
+    request: Request,
+    page: int = 1,
+    per_page: int = 10,
+):
+    '''Endpoint to load all emergency contacts'''
     
+    current_user = request.state.current_user
+    
+    with open('api/core/dependencies/data/emergency_contacts.json', 'r') as f:
+        emergency_contacts = json.load(f)
+    
+    pagination_data = paginate_items(emergency_contacts, page, per_page)
+        
+    return {
+        'pagination_data': pagination_data,
+        'user': current_user
+    }
+
+
+@external_router.get('/resources/emergency-locations')
+@add_template_context('pages/external/resources/emergency-locations.html')
+async def emergency_locations(
+    request: Request, 
+    db: Session=Depends(get_db),
+    page: int = 1,
+    per_page: int = 10,
+):
+    '''Endpoint to load all emergency locations'''
+    
+    current_user = request.state.current_user
+    
+    emergency_locations = EmergencyLocation.all(db, sort_by='state', order='asc')
+    pagination_data = paginate_items(emergency_locations, page, per_page)
+        
+    return {
+        'pagination_data': pagination_data,
+        'user': current_user
+    }
+  
+  
+@external_router.get('/resources/emergency-locations/{location_id}')
+@add_template_context('pages/external/resources/emergency-location-details.html')
+async def get_single_emergency_location(
+    request: Request, 
+    location_id: str, 
+    db: Session=Depends(get_db)
+):
+    '''Endpoint to lget a single location data'''
+    
+    current_user = request.state.current_user
+    
+    location = EmergencyLocation.fetch_by_id(db, id=location_id)
+    
+    if location is None:
+        flash(request, 'Location not found', MessageCategory.ERROR)
+        return RedirectResponse(url='/resources/emergency-locations')
+        
+    return {
+        'location': location,
+        'user': current_user
+    }
+      
 
 @external_router.get('/resources/{url_slug}')
-@add_template_context('pages/external/resource-detail.html')
+@add_template_context('pages/external/resources/resource-detail.html')
 async def get_single_resource(request: Request, url_slug: str):
     '''Endpoint to load all resources'''
     
     current_user = request.state.current_user
     
-    with open('api/core/dependencies/articles.json', 'r') as f:
+    with open('api/core/dependencies/data/articles.json', 'r') as f:
         resources = json.load(f)
     
     res = None
