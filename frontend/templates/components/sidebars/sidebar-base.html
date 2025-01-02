@@ -8,25 +8,25 @@
 </aside>
 
 <script>
-    const hamburgerIcon = document.querySelector('.hamburger-icon.sidebar-icon');
+    const menuIcon = document.querySelector('.hamburger-icon.sidebar-icon');
     const cancelIcon = document.querySelector('.cancel-icon.sidebar-icon');
     const sidebar = document.querySelector('.sidebar');
 
     // Set up default settings in case the page is lauched on a mobile or tab phone
     if (window.innerWidth <= 1024) {
-        hamburgerIcon.classList.remove('hide');
+        menuIcon.classList.remove('hide');
         sidebar.classList.add('hide');
     }
 
-    hamburgerIcon.addEventListener('click', () => {
+    menuIcon.addEventListener('click', () => {
         sidebar.classList.remove('hide');
         cancelIcon.classList.remove('hide');
-        hamburgerIcon.classList.add('hide');
+        menuIcon.classList.add('hide');
     });
 
     cancelIcon.addEventListener('click', () => {
         sidebar.classList.add('hide');
-        hamburgerIcon.classList.remove('hide');
+        menuIcon.classList.remove('hide');
         cancelIcon.classList.add('hide');
     });
 
@@ -34,17 +34,17 @@
         if (window.innerWidth <= 1024) {
             // Close sidebar when clicking outside
             document.addEventListener('click', (e) => {
-                if (!sidebar.contains(e.target) && e.target !== hamburgerIcon) {
+                if (!sidebar.contains(e.target) && e.target !== menuIcon) {
                     sidebar.classList.add('hide');
                 }
             });
     
             // Show sidebar when clicking on hamburger icon
-            hamburgerIcon.classList.remove('hide');
+            menuIcon.classList.remove('hide');
             sidebar.classList.add('hide');
         } else {
             // Show sidebar when clicking on hamburger icon
-            hamburgerIcon.classList.add('hide');
+            menuIcon.classList.add('hide');
             sidebar.classList.remove('hide');
         }
     });

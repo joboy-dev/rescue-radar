@@ -6,6 +6,7 @@ from sqlalchemy import event
 
 from api.core.base.base_model import BaseTableModel
 from api.v1.models.notification import Notification
+from api.v1.models.responder import Responder
 
 
 class ResponderStatus(enum.Enum):
@@ -34,9 +35,12 @@ def after_insert_op(mapper, connection, target):
     try:
         session = Session(bind=connection)
         
+        # Get responder
+        responder = session.query(Responder).filter_by(id=target.responder_id).first()
+        
         # Create notification
         notification = Notification(
-            target_user_id=target.responder.user_id,
+            target_user_id=responder.user_id,
             message=f'A new emenrgency has been assigned to you',
             emergency_id=target.emergency_id
         )
