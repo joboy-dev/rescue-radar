@@ -1,0 +1,29 @@
+{% extends 'pages/user/responder/responder-base.html' %}
+
+{% block dashboard_content %}
+<div class="dashboard settings">
+    <header>
+        <h1>Responder Settings</h1>
+        <p>View and update your responder details below.</p>
+    </header>
+
+    <div class="form-fields">
+        <form id="responder-details-form" action="/responders/settings/update" method="post">
+            <div class="form-group">
+                <label for="contact-number">Contact Number</label>
+                <input type="text" id="contact-number" name="contact-number" value="{{ responder.contact_number }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status">
+                    <option value="available" {% if responder.status == 'available' %}selected{% endif %}>Available</option>
+                    <option value="offline" {% if responder.status == 'offline' %}selected{% endif %}>Offline</option>
+                    <option value="engaged" {% if responder.status == 'engaged' %}selected{% endif %}>Engaged</option>
+                </select>
+            </div>
+            <button type="submit" class="save">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

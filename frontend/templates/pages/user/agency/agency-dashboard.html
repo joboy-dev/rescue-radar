@@ -50,8 +50,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% if agency_emergencies %}
-                    {% for emergency in agency_emergencies[:5] %}
+                {% if active_emergencies %}
+                    {% for emergency in active_emergencies[:5] %}
                     <tr>
                         <td>{{ emergency.event_type }}</td>
                         <td>{{ emergency.description }}</td>

@@ -1,0 +1,120 @@
+{% extends 'pages/user/responder/responder-base.html' %}
+
+{% block dashboard_content %}
+
+<div class="dashboard emergencies">
+    <header>
+        <h1>Assigned Emergencies</h1>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Media</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if responder_emergencies %}
+                {% for responder_emergency in responder_emergencies %}
+                <tr>
+                    <td>{{ responder_emergency.emergency.event_type }}</td>
+                    <td>{{ responder_emergency.emergency.description }}</td>
+                    <td>{{ responder_emergency.emergency.location_str }}</td>
+                    <td>{{ responder_emergency.emergency.severity }}</td>
+                    <td>{{ responder_emergency.emergency.status | capitalize }}</td>
+                    <td>
+                        {% if responder_emergency.emergency.attachments %}
+                            {% for attachment_url in responder_emergency.emergency.attachments.split(',') %}
+                            <a href="{{ attachment_url }}" target="_blank">Attachment{{ loop.index }}</a>
+                            {% endfor %}
+                        {% else %}
+                        No media available
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('get_single_emergency', emergency_id=responder_emergency.emergency.id) }}" class="btn edit">View</a>
+
+                        {% if responder_emergency.status != 'Completed' %}
+                        <form action="/emergencies/{{ responder_emergency.emergency_id }}/resolve" method="post">
+                            <input class="btn add" type="submit" value="Mark as Resolved">
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="text-align: center;" colspan="7">No emergencies found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<div class="dashboard emergencies">
+    <header>
+        <h1>All Emergencies</h1>
+    </header>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Responder(s)</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Media</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if emergencies %}
+                {% for emergency in pending_emergencies %}
+                <tr>
+                    <td>{{ emergency.event_type }}</td>
+                    <td>{{ emergency.description }}</td>
+                    <td>{{ emergency.location_str }}</td>
+                    <td>
+                        {% if emergency.responder_emergencies %}
+                            {% for res_emergency in emergency.responder_emergencies %}
+                            <p>{{ res_emergency.responder.user.profile.first_name }} {{ res_emergency.responder.user.profile.last_name }}</p>
+                            {% endfor %}
+                        {% else %}
+                        No responders assigned
+                        {% endif %}
+                    </td>
+                    <td>{{ emergency.severity }}</td>
+                    <td>{{ emergency.status | capitalize }}</td>
+                    <td>
+                        {% if emergency.attachments %}
+                            {% for attachment_url in emergency.attachments.split(',') %}
+                            <a href="{{ attachment_url }}" target="_blank">Attachment {{ loop.index }}</a>
+                            {% endfor %}
+                        {% else %}
+                        No media available
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('get_single_emergency', emergency_id=emergency.id) }}" class="btn edit">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td style="text-align: center;" colspan="8">No emergencies found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', path='js/emergencyStatusUpdate.js') }}"></script>
+{% endblock %}

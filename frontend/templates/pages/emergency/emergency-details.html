@@ -36,21 +36,26 @@
                 <p>Anonymous</p>
                 {% endif %}
             </div>
-            <!-- <div class="row">
+            {% if emergency.responder_emergencies %}
+            <div class="row">
+                <h2>Assigned Responders</h2>
+                {% for res_emergency in emergency.responder_emergencies %}
+                <p>{{ res_emergency.responder.user.profile.first_name }} {{ res_emergency.responder.user.profile.last_name }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if emergency.attachments %}
+            <div class="row">
                 <h2>Attachments</h2>
                 <div class="attachments">
-                    <img src="/static/images/fire.jpg" alt="Fire Image">
-                    <img src="/static/images/damage.jpg" alt="Damage Image">
+                    {% for attachment_url in emergency.attachments.split(',') %}
+                    <a href="{{ attachment_url }}" target="_blank" rel="noopener noreferrer"><img src="{{ attachment_url }}" alt="Attachment {{ loop.index }}"></a>
+                    {% endfor %}
                 </div>
-            </div> -->
-            <!-- <div class="row">
-                <h2>Responders</h2>
-                <ul>
-                    <li>🚑 Ambulance 1 (Resolved)</li>
-                    <li>🔥 Fire Truck 5 (On-Site)</li>
-                </ul>
-            </div> -->
+            </div>
+            {% endif %}
         </div>
+        
         <div class="media">
             <!-- Map View of Local Resources -->
             <div class="map-placeholder">

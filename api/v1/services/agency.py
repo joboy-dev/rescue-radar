@@ -35,6 +35,7 @@ class AgencyService:
             .order_by(Emergency.severity.desc())
         )
         agency_emergencies = query.all()
+        active_emergencies = query.filter(Emergency.status == 'In Progress').all()
         agency_emergency_count = query.count()
         
         # Get all emergencies
@@ -44,16 +45,16 @@ class AgencyService:
         # Get total agency emergencies completed this month
         completed_emergencies_this_month = (
             query
-            .filter(Emergency.status == 'completed')
-            .filter(Emergency.created_at.between(start_of_month, end_of_month))
+            .filter(Emergency.status == 'Resolved')
+            .filter(Emergency.updated_at.between(start_of_month, end_of_month))
             .count()
         )
         
         # Get total agency emergencies completed in the past year
         completed_emergencies_this_year = (
             query
-            .filter(Emergency.status == 'completed')
-            .filter(Emergency.created_at.between(start_of_year, end_of_year))
+            .filter(Emergency.status == 'Resolved')
+            .filter(Emergency.updated_at.between(start_of_year, end_of_year))
             .count()
         )
         
@@ -89,6 +90,8 @@ class AgencyService:
             'user': current_user,
             'agency': agency,
             'emergencies': all_pending_emergencies,
+            'active_emergencies': active_emergencies,
+            'active_emergencies_count': len(active_emergencies),
             'agency_emergencies': agency_emergencies,
             'agency_emergency_count': agency_emergency_count,
             'total_emergencies_this_month': total_emergencies_this_month,

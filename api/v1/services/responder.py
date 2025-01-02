@@ -38,27 +38,27 @@ class ResponderService:
         all_emergencies = Emergency.all(db)
         all_pending_emergencies = Emergency.fetch_by_field(db, order='asc', status='Pending')
         assigned_emergencies = query.filter(Emergency.status == 'In Progress').all()
-        
+                
         # Get total responder emergencies completed
         completed_emergencies_all_time = (
             query
-            .filter(Emergency.status == 'completed')
+            .filter(Emergency.status == 'Resolved')
             .count()
         )
         
         # Get total responder emergencies completed this month
         completed_emergencies_this_month = (
             query
-            .filter(Emergency.status == 'completed')
-            .filter(Emergency.created_at.between(start_of_month, end_of_month))
+            .filter(Emergency.status == 'Resolved')
+            .filter(Emergency.updated_at.between(start_of_month, end_of_month))
             .count()
         )
         
         # Get total responder emergencies completed in the past year
         completed_emergencies_this_year = (
             query
-            .filter(Emergency.status == 'completed')
-            .filter(Emergency.created_at.between(start_of_year, end_of_year))
+            .filter(Emergency.status == 'Resolved')
+            .filter(Emergency.updated_at.between(start_of_year, end_of_year))
             .count()
         )
         
@@ -82,8 +82,9 @@ class ResponderService:
             'responder_emergencies': responder_emergencies,
             'emergencies': all_emergencies,
             'pending_emergencies': all_pending_emergencies,
+            'active_emergencies': assigned_emergencies,
             'assigned_emergencies': assigned_emergencies,
-            'assigned_emergencies_count': len(assigned_emergencies),
+            'assigned_emergencies_count': len(responder_emergencies),
             'total_emergencies_this_month': total_emergencies_this_month,
             'total_emergencies_this_year': total_emergencies_this_year,
             'completed_emergencies_this_month': completed_emergencies_this_month,

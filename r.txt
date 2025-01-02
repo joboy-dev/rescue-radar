@@ -38,3 +38,17 @@
     }
 
     map.on('click', onMapClick);
+
+
+                        <button class="btn update-btn">Update Status</button>
+                        <form action="/responders/emergency/{{ responder_emergency.id }}/update" method="post" class="update-status-form hide">
+                            <label for="status-update">
+                                <select name="status" id="status-update">
+                                    <option value="Assigned">Assigned</option>
+                                    <option value="On Site">On Site</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="Recalled">Recalled</option>
+                                </select>
+                            </label>
+                            <input type="submit" value="Update">
+                        </form>

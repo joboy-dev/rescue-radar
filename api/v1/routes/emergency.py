@@ -10,6 +10,8 @@ from api.db.database import get_db
 from api.utils.firebase_service import FirebaseService
 from api.v1.models.location import Location
 from api.v1.models.emergency import Emergency, EventType, SeverityLevel, EVENT_TYPE_EMOJIS
+from api.v1.models.responder import Responder
+from api.v1.models.responder_emergency import ResponderEmergency
 from api.v1.services.emergency import EmergencyService
 
 
@@ -19,7 +21,7 @@ emergency_router = APIRouter(prefix='/emergencies')
 @add_template_context('pages/emergency/report-emergency.html')
 async def report_emergency(
     request: Request,
-    pictures: Optional[List[UploadFile]]=None, 
+    pictures: Optional[List[UploadFile]]=File(None), 
     db: Session=Depends(get_db)
 ):
     
@@ -63,7 +65,8 @@ async def report_emergency(
             }
         ],
         button_text='Report Emergency',
-        action='/emergencies/report'
+        action='/emergencies/report',
+        enctype='multipart/form-data'
     )
     
     context = {
@@ -86,8 +89,8 @@ async def report_emergency(
         
         # Upload pictures to firebase if there are any pictures
         picture_urls = []
-        # print(pictures)
         if pictures:
+            print(pictures)
             for picture in pictures:
                 picture_url = await FirebaseService.upload_file(
                     file=picture,
@@ -204,3 +207,53 @@ async def get_single_emergency(
     }
     
     return context
+
+
+@emergency_router.post('/{emergency_id}/resolve')
+async def mark_emergency_as_resolved(
+    request: Request,
+    emergency_id: str,
+    db: Session=Depends(get_db)
+):
+    '''Endpoint to update agency settings'''
+    
+    current_user = request.state.current_user
+    
+    if current_user.role not in ['Responder', 'Agency admin']:
+        flash(request,'Unauthorized action', MessageCategory.ERROR)
+        return RedirectResponse(url='/dashboard', status_code=303)
+    
+    emergency = Emergency.fetch_by_id(db, id=emergency_id)
+    
+    if not emergency:
+        flash(request, 'Emergency not found', MessageCategory.ERROR)
+        return RedirectResponse(
+            url=f"/responders/emergencies" if current_user.role == 'Responder' else f"/agency/emergencies",             
+            status_code=303
+        )
+    
+    emergency = Emergency.update(
+        db, 
+        id=emergency.id,
+        status='Resolved',
+    )
+    
+    for responder_emergency in emergency.responder_emergencies:
+        # Update responder status to unavailable
+        Responder.update(
+            db, 
+            id=responder_emergency.responder_id,
+            status='available',
+        )
+        
+        ResponderEmergency.update(
+            db, 
+            id=responder_emergency.id,
+            status='Completed',
+        )
+    
+    flash(request, f'Emergency marked as resolved', MessageCategory.SUCCESS)
+    return RedirectResponse(
+        url=f"/responders/emergencies" if current_user.role == 'Responder' else f"/agency/emergencies", 
+        status_code=303
+    )

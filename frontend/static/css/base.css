@@ -154,13 +154,12 @@ img.icon {
         font-size: 27px;
     }
 
-    /* .dropdown {
-        width: 50%;
-    } */
-    
-
     .logo {
         width: 50%;
+    }
+
+    section:first-child {
+        margin-top: 12vh;
     }
 
     section > * {

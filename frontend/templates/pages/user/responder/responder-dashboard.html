@@ -46,14 +46,14 @@
     <div class="active-emergencies-section">
         <h2>Assigned Emergencies</h2>
         <div class="emergency-list">
-            {% for emergency in assigned_emergencies %}
+            {% for assigned_emergency in assigned_emergencies %}
             <div class="emergency-card">
                 <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
                 <div class="card-content">
-                    <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }}</h3>
-                    <p><strong>Location:</strong> {{ emergency.location_str }}</p>
-                    <p><strong>Reported:</strong> {{ emergency.created_at.strftime('%b %d, %Y') }}</p>
-                    <a href="{{ url_for('get_single_emergency', emergency_id=emergency.id) }}" class="btn action">View details</a>
+                    <h3>{{ emojis[assigned_emergency.emergency.event_type] }} {{ assigned_emergency.emergency.event_type }}</h3>
+                    <p><strong>Location:</strong> {{ assigned_emergency.emergency.location_str }}</p>
+                    <p><strong>Reported:</strong> {{ assigned_emergency.emergency.created_at.strftime('%b %d, %Y') }}</p>
+                    <a href="{{ url_for('get_single_emergency', emergency_id=assigned_emergency.emergency.id) }}" class="btn action">View details</a>
                 </div>
             </div>
             {% endfor %}

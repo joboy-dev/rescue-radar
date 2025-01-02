@@ -80,6 +80,31 @@ div.search-results {
     /* background-color: red; */
 }
 
+/* Icons */
+img.hamburger-icon, img.cancel-icon {
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    z-index: 1200;
+}
+
+img.hamburger-icon.nav-icon, img.cancel-icon.nav-icon {
+    margin: 20px;
+}
+
+img.hamburger-icon.sidebar-icon, img.cancel-icon.sidebar-icon {
+    position: fixed;
+    left: 5px;
+}
+
+img.hamburger-icon.sidebar-icon {
+    top: 150px;
+}
+
+img.cancel-icon.sidebar-icon {
+    top: 120px;
+}
+
 /* NAVBAR */
 
 nav {
@@ -101,7 +126,7 @@ nav {
 }
 
 .logo img {
-    width: 80%;
+    width: 100%;
 }
 
 nav .nav-links {
@@ -111,11 +136,27 @@ nav .nav-links {
     justify-content: end;
 }
 
+div.link-container {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    height: 100%;
+}
+
 nav .nav-links .link a {
     text-decoration: none;
     color: var(--white-color);
     font-size: 0.7rem;
     padding: 0 20px;
+}
+
+nav .nav-links .link a.btn {
+    padding: 10px 15px;
+}
+
+nav .nav-links .link a.btn:hover {
+    color: var(--white-color);
+    background-color: var(--secondary-color);
 }
 
 nav .nav-links .link a:hover {
@@ -355,16 +396,6 @@ div#dashboard-content {
     overflow-y: auto; 
 }
 
-img.sidebar-hamburger-icon, img.cancel-icon {
-    height: 30px;
-    width: 30px;
-    cursor: pointer;
-    position: fixed;
-    top: 110px;
-    left: 5px;
-    z-index: 1200;
-}
-
 .sidebar h2 {
     font-size: 1rem;
     margin-top: 80px;
@@ -544,6 +575,17 @@ div#paginator {
 @media screen and (max-width: 1024px) {
     nav {
         padding: var(--padding-tab);
+        height: fit-content;
+        align-items: center;
+    }
+
+    nav .nav-links .link {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: right;
+        gap: 10px;
+        margin-right: 30px;
     }
 
     footer {
@@ -567,7 +609,11 @@ div#paginator {
     }
 
     .sidebar h2 {
-        margin-top: 80px;
+        margin-top: 130px;
+    }
+
+    img.cancel-icon.sidebar-icon {
+        top: 150px;
     }
 }
 
