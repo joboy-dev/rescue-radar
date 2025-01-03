@@ -1,0 +1,52 @@
+{% if user.role == 'Responder'%}
+{% extends 'pages/user/responder/responder-base.html' %}
+{% else %}
+{% extends 'pages/user/agency/agency-base.html' %}
+{% endif %}
+
+{% block dashboard_content %}
+<header>
+    <h1>Final Report</h1>
+    <p>Details of the incident report submitted.</p>
+</header>
+
+<div class="details">
+    <h2>{{ report.outcome | capitalize }}</h2>
+
+    <p class="dates">{{ report.start_time.strftime('%b %d, %Y %H:%M') }} - {% if report.end_time %}{{ report.end_time.strftime('%b %d, %Y %H:%M') }}{%else%}Ongoing{% endif %}</p>
+    {% if report.end_time %}
+    <p><b>Completion Time:</b> {{ report.response_time_minutes | round(2) }} minutes</p>
+    {% endif %}
+
+    <div class="row">
+        <h3>Description</h3>
+        <p>{{ report.description }}</p>
+    </div>
+
+    <div class="row">
+        <h3>Comments</h3>
+        <p>{{ report.comments }}</p>
+    </div>
+
+    <div class="row">
+        <h3>Emergenccy Details</h3>
+        <a href="{{ url_for('get_single_emergency', emergency_id=report.emergency_id) }}">View details of resolved emergency</a>
+    </div>
+
+    <div class="row">
+        <h3>Responders Involved</h3>
+        <ul>
+            {% for responder_emergency in report.responders %}
+            <li>{{ responder_emergency.responder.user.profile.first_name }} {{ responder_emergency.responder.user.profile.last_name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if user.role == 'Responder' %}
+    <div class="row">
+        <h3>Update report</h3>
+        <a href="" class="btn">Update Details of Report</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

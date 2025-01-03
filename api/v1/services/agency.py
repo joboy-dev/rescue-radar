@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from api.v1.models.emergency import EVENT_TYPE_EMOJIS, Emergency
 from api.v1.models.agency import Agency
 from api.v1.models.responder import Responder
+from api.v1.models.report import FinalReport
 from api.v1.models.responder_emergency import ResponderEmergency
 
 
@@ -86,6 +87,18 @@ class AgencyService:
             status='engaged',
         )
         
+        # Get agency reports with associated responders and agencies
+        report_query = (
+            db.query(FinalReport)
+            .join(Emergency, FinalReport.emergency_id == Emergency.id)
+            .join(ResponderEmergency, Emergency.id == ResponderEmergency.emergency_id)
+            .join(Responder, Responder.id == ResponderEmergency.responder_id)
+            .join(Agency, Agency.id == Responder.agency_id)
+            .filter(Agency.id == agency.id)
+            .order_by(FinalReport.created_at.asc())
+        )
+        reports = report_query.all()
+        
         data = {
             'user': current_user,
             'agency': agency,
@@ -106,6 +119,7 @@ class AgencyService:
             'total_responders_count': len(agency.responders),
             'resources': agency.resources,
             'emojis': EVENT_TYPE_EMOJIS,
+            'reports': reports,
         }
         
         return data

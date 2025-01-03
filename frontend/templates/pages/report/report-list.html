@@ -1,0 +1,33 @@
+{% if user.role == 'Responder'%}
+{% extends 'pages/user/responder/responder-base.html' %}
+{% else %}
+{% extends 'pages/user/agency/agency-base.html' %}
+{% endif %}
+
+{% block dashboard_content %}
+<header>
+    <h1>Final Reports</h1>
+    <p>A comprehensive list of all final reports submitted.</p>
+</header>
+
+<div class="list">
+    {% if pagination_data.data %}
+        {% for report in pagination_data.data %}
+        <div class="card">
+            <div class="card-content">
+                <h3>{{ report.outcome | capitalize }}</h3>
+                {% if report.end_time %}
+                <p><b>Completion Time:</b> {{ report.response_time_minutes | round(2) }} minutes</p>
+                {% endif %}
+                <p>{{ report.start_time.strftime('%b %d, %Y %H:%M') }} - {% if report.end_time %}{{ report.end_time.strftime('%b %d, %Y %H:%M') }}{%else%}Ongoing{% endif %}</p>
+                <a href="{{ url_for('get_report_details', report_id=report.id) }}" class="btn edit">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No reports found.</p>
+    {% endif %}
+</div>
+
+{% include 'components/paginator.html' %}
+{% endblock %}

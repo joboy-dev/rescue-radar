@@ -5,10 +5,10 @@
     <h1>Emergency Contacts</h1>
 </header>
 
-<div class="resource-list">
+<div class="list">
     {% if pagination_data.data %}
         {% for emergency_contact in pagination_data.data %}
-        <div class="resource-card">
+        <div class="card">
             <div class="card-content">
                 <h3>{{ emergency_contact.name }}</h3>
                 <p>{{emergency_contact.description}}</p>

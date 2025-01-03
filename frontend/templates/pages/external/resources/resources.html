@@ -7,14 +7,14 @@
 
 {% include 'components/search-bar.html' %}
 
-<div class="resource-list">
+<div class="list">
     {% if pagination_data.data %}
         {% for resource in pagination_data.data %}
-        <div class="resource-card">
+        <div class="card">
             <div class="card-content">
                 <h1>{{ emojis[resource.event_type | capitalize] }}</h1>
                 <h3><a href="{{ url_for('get_single_resource', url_slug=resource.url_slug) }}">{{ resource.title }}</a></h3>
-                <p>{{ resource.summary }}</p>
+                <p>{{ resource.summary[:100] }}...</p>
             </div>
         </div>
         {% endfor %}

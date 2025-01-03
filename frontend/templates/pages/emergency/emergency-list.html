@@ -9,10 +9,10 @@
     <header>Emergency List</header>
 
     <!-- <div class="container"> -->
-    <div class="emergency-list">
+    <div class="list">
         {% if emergencies %}
             {% for emergency in emergencies %}
-            <div class="emergency-card">
+            <div class="card">
                 <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
                 <div class="card-content">
                     <h3>{{ emojis[emergency.event_type] }} {{ emergency.event_type }}</h3>

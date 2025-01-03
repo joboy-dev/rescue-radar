@@ -6,6 +6,6 @@
     <li><a href="{{ url_for('responder_dashboard') }}">Dashboard</a></li>
     <li> <a href="{{ url_for('responder_emergencies') }}">Manage Emergencies</a></li>
     <li><a href="{{ url_for('responder_settings') }}">Settings</a></li>
-    <li><a href="#reports">Reports</a></li>
+    <li><a href="{{ url_for('get_all_reports') }}">Reports</a></li>
 </ul>
 {% endblock %}

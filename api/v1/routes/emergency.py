@@ -2,6 +2,7 @@ from typing import List, Optional
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile, Depends
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.form_builder import build_form
@@ -10,6 +11,7 @@ from api.db.database import get_db
 from api.utils.firebase_service import FirebaseService
 from api.v1.models.location import Location
 from api.v1.models.emergency import Emergency, EventType, SeverityLevel, EVENT_TYPE_EMOJIS
+from api.v1.models.report import FinalReport
 from api.v1.models.responder import Responder
 from api.v1.models.responder_emergency import ResponderEmergency
 from api.v1.services.emergency import EmergencyService
@@ -162,7 +164,7 @@ async def get_nearby_incidents(
     
 
 @emergency_router.get('/')
-@add_template_context('pages/emergency/view-emergencies.html')
+@add_template_context('pages/emergency/emergency-list.html')
 async def get_all_emergencies(
     request: Request,
     db: Session=Depends(get_db)
@@ -239,6 +241,14 @@ async def mark_emergency_as_resolved(
     )
     
     for responder_emergency in emergency.responder_emergencies:
+        # Update final report
+        FinalReport.update(
+            db,
+            id=responder_emergency.final_report_id,
+            outcome='Resolved',
+            end_time=datetime.now()
+        )
+        
         # Update responder status to unavailable
         Responder.update(
             db, 

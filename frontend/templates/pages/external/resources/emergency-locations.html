@@ -7,10 +7,10 @@
 
 {% include 'components/search-bar.html' %}
 
-<div class="resource-list">
+<div class="list">
     {% if pagination_data %}
         {% for location in pagination_data.data %}
-        <div class="resource-card">
+        <div class="card">
             <div class="card-content">
                 <h3><a href="{{ url_for('get_single_emergency_location', location_id=location.id) }}">{{ location.name }}</a></h3>
                 <p>{{ location.type }}</p>

@@ -34,8 +34,19 @@ class AuthMiddleware(BaseHTTPMiddleware):
             '/agency/details',
             '/agency/dashboard',
             '/agency/responders',
+            '/agency/emergencies'
+            'agency/settings',
+            'agency/settings/update'
             '/notifications',
-            '/responders/dashboard'
+            '/responders'
+            '/responders/dashboard',
+            '/responders/search',
+            '/responders/emergencies',
+            '/responders/settings',
+            '/responders/settings/update',
+            'responders/agencyless',
+            '/reports',
+            # '/reports/{report_id}',
         ]  # Define more as needed
 
         # Check access token in cookies

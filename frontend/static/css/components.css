@@ -566,6 +566,93 @@ div#paginator {
     pointer-events: none;
 }
 
+
+/* LIST and CARD */
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    border: 2px solid var(--secondary-color);
+    padding: 20px;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.card .card-content {
+    padding: 10px;
+}
+
+.card h3 a, .card h3 {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.card h3 a:hover {
+    color: var(--secondary-color);
+}
+
+.card p {
+    margin: 2px 0;
+    color: var(--black-color);
+    font-size: 0.6rem;
+}
+
+.card a {
+    color: var(--black-color);
+    font-size: 0.6rem;
+    text-decoration: none;
+}
+
+.card a:hover {
+    color: var(--secondary-color);
+}
+
+/* Details */
+
+.details .info .row {
+    margin-bottom: 20px;
+}
+
+.row h2 {
+    margin: 0 0 5px;
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+}
+
+.row h3 {
+    color: var(--primary-color);
+    font-size: 0.7rem;
+}
+
+.row p {
+    font-size: 0.6rem;
+    color: var(--black-color);
+}
+
+.row a {
+    font-size: 0.6rem;
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */
 /* ------------------------------------------------------- */
