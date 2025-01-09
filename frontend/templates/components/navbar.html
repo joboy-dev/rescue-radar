@@ -46,7 +46,7 @@
                 <a href="{{ url_for('home') }}" class="{% if page == 'index' %} active {% endif %}">Home</a>
                 <a href="{{ url_for('about') }}" class="{% if page == 'about' %} active {% endif %}">About</a>
                 <a href="{{ url_for('contact') }}" class="{% if page == 'contact' %} active {% endif %}">Contact</a>
-                <a href="{{ url_for('resources') }}" class="{% if page == 'contact' %} active {% endif %}"z>Resources</a>
+                <a href="{{ url_for('resources') }}" class="{% if page == 'resources' %} active {% endif %}"z>Resources</a>
                 {% if not user %}
                 <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
                 {% endif %}

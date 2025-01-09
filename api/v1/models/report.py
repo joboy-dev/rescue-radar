@@ -20,7 +20,6 @@ class FinalReport(BaseTableModel):
     description = sa.Column(sa.Text, nullable=False)    
     start_time = sa.Column(sa.DateTime, nullable=True)  # When the emergency was reported
     end_time = sa.Column(sa.DateTime, nullable=True)  # When the emergency was resolved
-    response_time = sa.Column(sa.Integer, nullable=True)  # Time taken to resolve the emergency in minutes
     comments = sa.Column(sa.Text)
     emergency_id = sa.Column(sa.String, sa.ForeignKey('emergencies.id'), nullable=False)
     

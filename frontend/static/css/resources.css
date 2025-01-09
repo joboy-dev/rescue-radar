@@ -155,7 +155,7 @@ header h1 {
 
 .map-placeholder {
     background: var(--white-color);
-    height: 500px;
+    height: 60vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -194,5 +194,4 @@ header h1 {
 /* MOBILE */
 
 @media screen and (max-width: 540px) {
-
 }

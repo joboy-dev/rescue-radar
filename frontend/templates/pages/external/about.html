@@ -1,15 +1,51 @@
 {% extends 'components/base.html' %}
 
+{% block head_tags %}
+<link rel="stylesheet" href="/static/css/about.css">
+{% endblock %}
+
 {% block content %}
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
-<p>About</p>
+<header class="about-header">
+    <div class="container">
+        <h1>About Rescue Radar</h1>
+        <p>Your lifeline in times of emergency.</p>
+    </div>
+</header>
+
+<section class="mission-section">
+    <div class="container">
+        <div class="mission-content">
+            <div class="mission-text">
+                <h2>Our Mission</h2>
+                <p>
+                    At Rescue Radar, our mission is to empower individuals and communities with seamless access to emergency services, ensuring faster response times and saving lives during critical moments.
+                </p>
+            </div>
+            <div class="mission-image">
+                <img src="https://img.freepik.com/free-photo/side-view-paramedic-holding-injection_23-2149478547.jpg?ga=GA1.1.2092350398.1730195801&semt=ais_hybrid" alt="Rescue Radar Mission">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="vision-section">
+    <div class="container">
+        <div class="vision-content">
+            <h2>Our Vision</h2>
+            <p>
+                To become the most trusted platform for emergency management worldwide, leveraging technology to create safer communities and bridging the gap between those in need and responders.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <h2>Why Choose Rescue Radar?</h2>
+        <p>
+            Whether it's reporting an emergency, tracking responders, or accessing vital safety resources, Rescue Radar is your all-in-one solution. Join us in creating a safer world.
+        </p>
+        <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
+    </div>
+</section>
 {% endblock %}

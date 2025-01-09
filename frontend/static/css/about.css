@@ -1,0 +1,98 @@
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    margin: 10px 0;
+}
+
+/* Header */
+.about-header {
+    background-color: var(--primary-color);
+    color:var(--white-color);
+    padding: 60px 0;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.about-header h1 {
+    font-size: 1.5rem;
+}
+
+.about-header p {
+    font-size: 0.9rem;
+}
+
+/* Mission Section */
+.mission-section {
+    padding: 50px 0;
+    background-color: var(--white-color);
+}
+
+.mission-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.mission-text {
+    flex: 1;
+    padding: 20px;
+}
+
+.mission-image {
+    flex: 1;
+    text-align: center;
+}
+
+.mission-image img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* Vision Section */
+.vision-section {
+    padding: 50px 0;
+    background-color: var(--tertiary-color);
+    text-align: center;
+}
+
+.vision-section h2 {
+    color: var(--black-color);
+}
+
+/* Call-to-Action Section */
+.cta-section {
+    padding: 50px 0;
+    background-color: var(--secondary-color);
+    color:var(--white-color);
+    text-align: center;
+}
+
+.cta-section .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color:var(--primary-color);
+    color:var(--white-color);
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cta-section .btn:hover {
+    background-color: #D22626;
+}
+
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* ------------------------------------------------------- */
+
+/* TAB */
+
+@media (max-width: 1024px) {
+    .mission-content {
+        flex-direction: column;
+    }
+}

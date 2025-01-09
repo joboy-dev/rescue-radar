@@ -21,7 +21,7 @@ def inject_context(request: Request):
     }
   
   
-def add_template_context(template_name: str):
+def add_template_context(template_path: str):
     def decorator(func: Callable):
         @wraps(func)
         async def wrapper(request: Request, *args, **kwargs) -> Response:
@@ -42,12 +42,12 @@ def add_template_context(template_name: str):
             
             # Merge function data with context_data
             context = {
-                'page': template_name.split('/')[-1].replace('.html', ''),
+                'page': template_path.split('/')[-1].replace('.html', ''),
                 'location': {**location_info},
                 **context_data, 
                 **result
             }
             
-            return frontend.TemplateResponse(template_name, context)
+            return frontend.TemplateResponse(template_path, context)
         return wrapper
     return decorator  

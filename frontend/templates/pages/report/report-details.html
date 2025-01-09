@@ -45,7 +45,7 @@
     {% if user.role == 'Responder' %}
     <div class="row">
         <h3>Update report</h3>
-        <a href="" class="btn">Update Details of Report</a>
+        <a href="{{ url_for('update_report', report_id=report.id) }}" class="btn">Update Details of Report</a>
     </div>
     {% endif %}
 </div>

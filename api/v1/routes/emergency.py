@@ -9,6 +9,7 @@ from api.core.dependencies.form_builder import build_form
 from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.db.database import get_db
 from api.utils.firebase_service import FirebaseService
+from api.utils.paginator import paginate_items
 from api.v1.models.location import Location
 from api.v1.models.emergency import Emergency, EventType, SeverityLevel, EVENT_TYPE_EMOJIS
 from api.v1.models.report import FinalReport
@@ -100,6 +101,10 @@ async def report_emergency(
                     upload_folder='emergencies',
                     model_id=current_user.id
                 )
+                if not picture_url:
+                    flash(request, 'Invalid picture upload Check file extension.', MessageCategory.ERROR)
+                    return RedirectResponse(url='/emergencies/report', status_code=303)
+                
                 picture_urls.append(picture_url)
         
         # Get relevant location data
@@ -167,6 +172,8 @@ async def get_nearby_incidents(
 @add_template_context('pages/emergency/emergency-list.html')
 async def get_all_emergencies(
     request: Request,
+    page: int = 1,
+    per_page: int = 10,
     db: Session=Depends(get_db)
 ):
     '''Endpoint to get all emergencies'''
@@ -177,11 +184,13 @@ async def get_all_emergencies(
         emergencies = Emergency.fetch_by_field(db=db, reported_by_id=current_user.id)
     else:
         emergencies = Emergency.all(db)
+        
+    pagination_data = paginate_items(emergencies, page, per_page)
     
     context = {
         'background_url': 'https://img.freepik.com/free-photo/medium-shot-firefighter-trying-put-out-wildfire_23-2151099514.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid',
         'user': current_user,
-        'emergencies': emergencies,
+        'pagination_data': pagination_data,
         'emojis': EVENT_TYPE_EMOJIS
     }
     

@@ -266,6 +266,10 @@ async def update_profile_picture(
         model_id=current_user.id
     )
     
+    if not picture_url:
+        flash(request, 'Invalid picture upload. Check file extension.', MessageCategory.ERROR)
+        return RedirectResponse(url='/profile', status_code=303)
+                
     Profile.update(db=db, id=profile.id, profile_picture=picture_url)
     
     flash(request, 'Picture updated successfully', MessageCategory.SUCCESS)

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from api.core.dependencies.context import add_template_context
 from api.core.dependencies.flash_messages import MessageCategory, flash
+from api.core.dependencies.form_builder import build_form
 from api.db.database import get_db
 from api.utils.paginator import paginate_items
 from api.v1.models.emergency import EVENT_TYPE_EMOJIS
@@ -106,7 +107,60 @@ async def about(request: Request):
 @external_router.get('/contact')
 @add_template_context('pages/external/contact.html')
 async def contact(request: Request):
-    return {}
+    
+    form = build_form(
+        title='Contact us',
+        fields=[
+            {
+                'type': 'text',
+                'label': 'Name',
+                'name': 'name',
+                'placeholder': 'e.g. John Doe',
+                'required': True,
+            },
+            {
+                'type': 'text',
+                'label': 'Phone Number',
+                'name': 'phone',
+                'placeholder': 'e.g. 08012345678',
+                'required': False,
+            },
+            {
+                'type': 'email',
+                'label': 'Email',
+                'name': 'email',
+                'placeholder': 'e.g. john.doe@gmail.com',
+                'required': True,
+            },
+            {
+                'type': 'textarea',
+                'label': 'Message',
+                'name': 'message',
+                'required': True,
+            }
+        ],
+        button_text='Send Message',
+        action='/contact'
+    )
+    
+    context = {
+        'background_url': 'https://img.freepik.com/free-photo/medium-shot-firefighter-trying-put-out-wildfire_23-2151099514.jpg?uid=R65046554&ga=GA1.1.2092350398.1730195801&semt=ais_hybrid',
+        'form': form
+    }
+    
+    if request.method == 'POST':
+        # Process the form submission
+        form_data = await request.form()
+        
+        # Collect form fields for re-rendering
+        context['form_data'] = form_data
+        
+        message = form_data.get('message').strip()
+        name = form_data.get('name')
+        email = form_data.get('email')
+        phone_number = form_data.get('phone')
+    
+    return context
 
 
 @external_router.get('/resources')

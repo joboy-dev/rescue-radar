@@ -85,3 +85,63 @@ async def get_report_details(
     }
     
     return context
+
+
+@report_router.api_route('/{report_id}/update', methods=["GET", "POST"])
+@add_template_context('pages/report/update-report.html')
+async def update_report(
+    request: Request,
+    report_id: str,
+    db: Session=Depends(get_db)
+):
+    
+    current_user = request.state.current_user
+    
+    redirect_dashboard = '/dashboard' if current_user.role == 'Public' else '/agency/dashboard'
+    
+    if current_user.role != 'Responder':
+        flash(request,'Unauthorized action', MessageCategory.ERROR)
+        return RedirectResponse(
+            url=redirect_dashboard, 
+            status_code=303
+        )
+    
+    report = FinalReport.fetch_by_id(db=db, id=report_id)
+    responder = Responder.fetch_one_by_field(db=db, user_id=current_user.id)
+    
+    context = {
+        'report': report,
+        'user': current_user
+    }
+    
+    if request.method == 'POST':
+        # Process the form submission
+        form_data = await request.form()
+        
+        # Collect form fields for re-rendering
+        context['form_data'] = form_data
+        
+        description = form_data.get('description').strip()
+        comments = form_data.get('comments').strip()
+        
+        responder_ids = [responder_emergency.responder_id for responder_emergency in report.responders]
+        
+        if responder.id not in responder_ids:
+            # flash error
+            flash(request, 'You are not assigned to this report', MessageCategory.ERROR)
+            return RedirectResponse(url='/reports', status_code=303)
+        
+        # Update the report in the database
+        FinalReport.update(
+            db, 
+            id=report_id, 
+            description=description, 
+            comments=comments
+        )
+        
+        # Redirect to the emergency dashboard
+        flash(request, 'Report updated successfully', MessageCategory.SUCCESS)
+    
+        return RedirectResponse('/reports', 303)
+                
+    return context

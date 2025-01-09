@@ -1,8 +1,10 @@
+from fastapi.responses import RedirectResponse
 import os, pyrebase
 from secrets import token_hex
-from fastapi import HTTPException, UploadFile, status
+from fastapi import HTTPException, Request, UploadFile, status
 
 from api.core.dependencies.firebase_config import firebase_config
+from api.core.dependencies.flash_messages import flash, MessageCategory
 from api.utils.settings import settings
 
 
@@ -11,7 +13,7 @@ class FirebaseService:
     @classmethod
     async def upload_file(
         cls, 
-        file, 
+        file,
         allowed_extensions: list | None, 
         upload_folder: str, 
         model_id: str
@@ -25,12 +27,12 @@ class FirebaseService:
         name = file_name.split('.')[0]
         
         if not file:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='File cannot be blank')
-        
+            return None
+
         if allowed_extensions:
             if file_extension not in allowed_extensions:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid file format')
-        
+                return None
+                
         os.makedirs(settings.TEMP_DIR, exist_ok=True)
         
         # Generate a new file name

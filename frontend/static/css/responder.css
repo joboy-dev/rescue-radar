@@ -144,7 +144,7 @@ div.resource .kpi-card:hover {
     font-size: 0.8rem;
 }
 
-.form-group input {
+.form-group input, .form-group textarea {
     width: 100%;
     padding: 10px;
     font-size: 0.7rem;
@@ -153,7 +153,7 @@ div.resource .kpi-card:hover {
     box-sizing: border-box;
 }
 
-.form-group input:focus {
+.form-group input:focus, .form-group textarea:focus {
     outline: none;
     border: none;
     border: 1px solid var(--secondary-color);

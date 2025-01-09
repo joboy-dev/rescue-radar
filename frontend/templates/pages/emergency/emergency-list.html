@@ -10,8 +10,8 @@
 
     <!-- <div class="container"> -->
     <div class="list">
-        {% if emergencies %}
-            {% for emergency in emergencies %}
+        {% if pagination_data.data %}
+            {% for emergency in pagination_data.data %}
             <div class="card">
                 <!-- <img src="https://via.placeholder.com/300x150" alt="Emergency Image"> -->
                 <div class="card-content">
@@ -29,4 +29,6 @@
     </div>
     <!-- </div> -->
 </section>
+
+{% include 'components/paginator.html' %}
 {% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'pages/external/resources/resources-base.html' %}
+
+{% block resources_content %}
+<header>
+    <h1>{{ location.name }}</h1>
+    <h2>{{ location.type }}</h2>
+    <p>{{ location.city }}, {{ location.state }}</p>
+</header>
+
+<div class="map-placeholder">
+    <div id="map"></div>
+</div>
+
+<script>
+    fetch("https://ipinfo.io/json?token=45a0b01f8664a2")
+    .then((response) => response.json())
+    .then((jsonResponse) => {
+        // Convert `loc` string to a list of integers
+        let current_coordinates = jsonResponse.loc.split(',').map(coord => parseFloat(coord));
+
+        // Get emergency location coordinates
+        let location_coordinates = ['{{location.latitude}}', '{{location.longitude}}'].map(coord => parseFloat(coord));
+
+        // Initialize the map
+        let map = L.map('map').setView(location_coordinates, 16);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        
+        // Add a marker to the map
+        L.marker(location_coordinates).addTo(map)
+           .bindPopup('{{ location.name }} at {{ location.city }}, {{ location.state }}')
+           .openPopup();
+    })
+    .catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+</script>
+
+{% endblock %}
