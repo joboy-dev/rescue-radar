@@ -53,6 +53,7 @@ env\Scripts\activate    # Windows
 pip install -r requirements.txt
 ```
 
+
 ---
 
 ## 🛠 Environment Configuration
@@ -87,7 +88,12 @@ CREATE DATABASE rescue_radar;
 ```bash
 alembic upgrade head
 ```
-
+4. **Seed Database**
+```bash
+python3 seed_user_data.py
+puthon3 seed_location_data.py
+python3 seed_emergency_location_data.py
+```
 ---
 
 ## 🚀 Running the Application
