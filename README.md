@@ -64,15 +64,7 @@ touch .env
 ```
 
 2. **Add the following environment variables:**
-```ini
-DATABASE_URL=postgresql+psycopg2://username:password@localhost/rescue_radar
-SECRET_KEY=your_secret_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REDIS_URL=redis://localhost:6379
-FIREBASE_API_KEY=your_firebase_key
-```
-> **Replace** `username`, `password`, and `your_secret_key` with appropriate values.
+Copy what is in env.sample file into .env file and use appropriate values
 
 ---
 
