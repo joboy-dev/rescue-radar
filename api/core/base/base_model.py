@@ -3,7 +3,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session
 from uuid import uuid4
 
-from api.db.database import Base, get_db
+from api.db.database import Base
 
 
 class BaseTableModel(Base):

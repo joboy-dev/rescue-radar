@@ -55,7 +55,7 @@ async def log_requests(request: Request, call_next):
     )
 
     # Log the formatted string
-    app_logger.info(log_string)
+    app_logger.debug(log_string)
 
     return response
     
@@ -74,8 +74,8 @@ async def http_exception(request: Request, exc: HTTPException):
     """HTTP exception handler"""
 
     exc_type, exc_obj, exc_tb = sys.exc_info()
-    app_logger.info(f"HTTPException: {request.url.path} | {exc.status_code} | {exc.detail}")
-    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
+    app_logger.debug(f"HTTPException: {request.url.path} | {exc.status_code} | {exc.detail}")
+    app_logger.debug(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 @app.exception_handler(RequestValidationError)
@@ -87,27 +87,27 @@ async def validation_exception(request: Request, exc: RequestValidationError):
         for error in exc.errors()
     ]
 
-    app_logger.info(f"RequestValidationError: {request.url.path} | {errors}")
+    app_logger.debug(f"RequestValidationError: {request.url.path} | {errors}")
 
 
 @app.exception_handler(IntegrityError)
 async def integrity_exception(request: Request, exc: IntegrityError):
     """Integrity error exception handlers"""
 
-    # app_logger.info(f"Exception occured: {request.url.path} | 500 | {exc}")
+    # app_logger.debug(f"Exception occured: {request.url.path} | 500 | {exc}")
     exc_type, exc_obj, exc_tb = sys.exc_info()
-    app_logger.info(f"Exception occured | {request.url.path} | 500")
-    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
+    app_logger.debug(f"Exception occured | {request.url.path} | 500")
+    app_logger.debug(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 @app.exception_handler(Exception)
 async def exception(request: Request, exc: Exception):
     """Other exception handlers"""
 
-    # app_logger.info(f"Exception occured | {request.url.path} | 500 | {exc}")
+    # app_logger.debug(f"Exception occured | {request.url.path} | 500 | {exc}")
     exc_type, exc_obj, exc_tb = sys.exc_info()
-    app_logger.info(f"Exception occured | {request.url.path} | 500")
-    app_logger.info(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
+    app_logger.debug(f"Exception occured | {request.url.path} | 500")
+    app_logger.debug(f"[ERROR] - An error occured | {exc}, {exc_type} {exc_obj} {exc_tb.tb_lineno}")
 
 
 # Run app
